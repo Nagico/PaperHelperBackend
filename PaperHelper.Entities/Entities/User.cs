@@ -7,6 +7,8 @@ public class User
     public string? Password { get; set; }
     public string? Phone { get; set; }
     
+    public Uri? Avatar { get; set; }
+    
     public DateTime LastLogin { get; set; }
     public DateTime CreatedAt { get; set; }
 }

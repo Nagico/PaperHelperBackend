@@ -32,6 +32,9 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .IsFixedLength()
             .IsRequired();
 
+        builder.Property(x => x.Avatar)
+            .HasColumnName("avatar");
+
         builder.Property(x => x.LastLogin)
             .HasColumnName("last_login");
 
