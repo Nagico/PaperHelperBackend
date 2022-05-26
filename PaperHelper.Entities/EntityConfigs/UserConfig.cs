@@ -9,8 +9,8 @@ public class UserConfig : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("tb_user");
-
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd();
@@ -38,8 +38,8 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.Property(x => x.LastLogin)
             .HasColumnName("last_login");
 
-        builder.Property(x => x.CreatedAt)
-            .HasColumnName("created_at")
+        builder.Property(x => x.CreateTime)
+            .HasColumnName("create_time")
             .ValueGeneratedOnAdd();
     }
 }

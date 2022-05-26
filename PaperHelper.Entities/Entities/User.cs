@@ -9,6 +9,8 @@ public class User
     
     public Uri? Avatar { get; set; }
     
+    public List<UserProject>? UserProjects { get; set; }
+
     public DateTime LastLogin { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreateTime { get; set; }
 }

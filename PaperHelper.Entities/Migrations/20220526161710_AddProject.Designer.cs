@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaperHelper.Entities;
 
@@ -10,9 +11,10 @@ using PaperHelper.Entities;
 namespace PaperHelper.Entities.Migrations
 {
     [DbContext(typeof(PaperHelperContext))]
-    partial class PaperHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220526161710_AddProject")]
+    partial class AddProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +33,10 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_time");
 
+                    b.Property<int>("CreateUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("create_user_id");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext")
                         .HasColumnName("description");
@@ -46,6 +52,8 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnName("update_time");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreateUserId");
 
                     b.ToTable("tb_project", (string)null);
                 });
@@ -84,6 +92,9 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnName("phone")
                         .IsFixedLength();
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -92,78 +103,32 @@ namespace PaperHelper.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tb_user", (string)null);
-                });
-
-            modelBuilder.Entity("PaperHelper.Entities.Entities.UserProject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("AccessTime")
-                        .IsRequired()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("access_time");
-
-                    b.Property<DateTime?>("CreateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
-
-                    b.Property<DateTime?>("EditTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("edit_time");
-
-                    b.Property<bool>("IsOwner")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_owner");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("project_id");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tb_user_project", (string)null);
-                });
-
-            modelBuilder.Entity("PaperHelper.Entities.Entities.UserProject", b =>
-                {
-                    b.HasOne("PaperHelper.Entities.Entities.Project", "Project")
-                        .WithMany("UserProjects")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PaperHelper.Entities.Entities.User", "User")
-                        .WithMany("UserProjects")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
+                    b.ToTable("tb_user", (string)null);
                 });
 
             modelBuilder.Entity("PaperHelper.Entities.Entities.Project", b =>
                 {
-                    b.Navigation("UserProjects");
+                    b.HasOne("PaperHelper.Entities.Entities.User", "CreateUser")
+                        .WithMany()
+                        .HasForeignKey("CreateUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreateUser");
                 });
 
             modelBuilder.Entity("PaperHelper.Entities.Entities.User", b =>
                 {
-                    b.Navigation("UserProjects");
+                    b.HasOne("PaperHelper.Entities.Entities.Project", null)
+                        .WithMany("Members")
+                        .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("PaperHelper.Entities.Entities.Project", b =>
+                {
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }
