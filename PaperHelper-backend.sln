@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperHelper", "PaperHelper\PaperHelper.csproj", "{B9B1A79F-6BDD-4534-AF04-D1A4F4F14DB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperHelper.Entities", "PaperHelper.Entities\PaperHelper.Entities.csproj", "{D1CCCF33-C42A-4E66-B93D-717775832C81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9B1A79F-6BDD-4534-AF04-D1A4F4F14DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9B1A79F-6BDD-4534-AF04-D1A4F4F14DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9B1A79F-6BDD-4534-AF04-D1A4F4F14DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9B1A79F-6BDD-4534-AF04-D1A4F4F14DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1CCCF33-C42A-4E66-B93D-717775832C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1CCCF33-C42A-4E66-B93D-717775832C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1CCCF33-C42A-4E66-B93D-717775832C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1CCCF33-C42A-4E66-B93D-717775832C81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
