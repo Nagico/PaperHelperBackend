@@ -10,13 +10,6 @@ public class UserProjectConfig : IEntityTypeConfiguration<UserProject>
     {
         builder.ToTable("tb_user_project");
         builder.HasKey(x => x.Id);
-        builder.HasOne(x => x.User)
-            .WithMany(u => u.UserProjects)
-            .HasForeignKey(x => x.UserId);
-
-        builder.HasOne(x => x.Project)
-            .WithMany(p => p.UserProjects)
-            .HasForeignKey(x => x.ProjectId);
 
         builder.Property(x => x.Id)
             .HasColumnName("id")
@@ -44,5 +37,13 @@ public class UserProjectConfig : IEntityTypeConfiguration<UserProject>
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time")
             .ValueGeneratedOnAdd();
+        
+        builder.HasOne(x => x.User)
+            .WithMany(u => u.UserProjects)
+            .HasForeignKey(x => x.UserId);
+
+        builder.HasOne(x => x.Project)
+            .WithMany(p => p.Members)
+            .HasForeignKey(x => x.ProjectId);
     }
 }

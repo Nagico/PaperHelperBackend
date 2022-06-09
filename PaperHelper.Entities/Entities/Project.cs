@@ -6,8 +6,10 @@ public class Project
     public string? Name { get; set; }
     public string? Description { get; set; }
 
-    public List<UserProject>? UserProjects { get; set; }
-    
+    public List<UserProject>? Members { get; set; }
+    public List<Attachment>? Attachments { get; set; }
+    public List<Note>? Notes { get; set; }
+
     public DateTime CreateTime { get; set; }
     public DateTime? UpdateTime { get; set; }
     
