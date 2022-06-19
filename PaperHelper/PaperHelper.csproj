@@ -21,4 +21,10 @@
       <ProjectReference Include="..\PaperHelper.Entities\PaperHelper.Entities.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Exceptions" />
+      <Folder Include="Services" />
+      <Folder Include="Utils" />
+    </ItemGroup>
+
 </Project>

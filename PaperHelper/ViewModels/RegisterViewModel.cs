@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PaperHelper.Dtos;
+namespace PaperHelper.ViewModels;
 
-public class RegisterDto
+public class RegisterViewModel
 {
     [Required]
     public string Username { get; set; }

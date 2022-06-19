@@ -4,9 +4,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using PaperHelper.Dtos;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
+using PaperHelper.ViewModels;
 
 namespace PaperHelper.Controllers;
 
@@ -25,19 +25,19 @@ public class AuthenticateController : ControllerBase
     
     [AllowAnonymous]
     [HttpPost("login", Name = "Login")]
-    public JsonResult Login([FromBody] LoginDto loginDto)
+    public JsonResult Login([FromBody] LoginViewModel loginViewModel)
     {
         //TODO: 统一异常 错误处理
         //User Authentication
-        if (string.IsNullOrWhiteSpace(loginDto.Username) || string.IsNullOrWhiteSpace(loginDto.Password))
+        if (string.IsNullOrWhiteSpace(loginViewModel.Username) || string.IsNullOrWhiteSpace(loginViewModel.Password))
         {
             return new JsonResult(new {
                 message = "Username or Password is empty"
             });
         }
         
-        var user = _context.Users.FirstOrDefault(u => u.Username == loginDto.Username);
-        if (user == null || !user.Password.Equals(loginDto.Password)) // TODO: 密码加密
+        var user = _context.Users.FirstOrDefault(u => u.Username == loginViewModel.Username);
+        if (user == null || !user.Password.Equals(loginViewModel.Password)) // TODO: 密码加密
         {
             return new JsonResult(new {
                 message = "Username or Password is incorrect"
@@ -45,30 +45,30 @@ public class AuthenticateController : ControllerBase
         }
 
         //Generate Token
-        var token = GenerateJwt(loginDto.Username);
+        var token = GenerateJwt(loginViewModel.Username);
         
         return new JsonResult(new {
             token = token,
-            username = loginDto.Username
+            username = loginViewModel.Username
         });
     }
 
     [AllowAnonymous]
     [HttpPost("register", Name = "Register")]
-    public JsonResult Register([FromBody] RegisterDto registerDto)
+    public JsonResult Register([FromBody] RegisterViewModel registerViewModel)
     {
         _context.Users.Add(new User {
-            Username = registerDto.Username,
-            Password = registerDto.Password, // TODO: 加密
-            Phone = registerDto.Phone
+            Username = registerViewModel.Username,
+            Password = registerViewModel.Password, // TODO: 加密
+            Phone = registerViewModel.Phone
         });
         _context.SaveChanges();
         
-        var token = GenerateJwt(registerDto.Username);
+        var token = GenerateJwt(registerViewModel.Username);
         
         return new JsonResult(new {
             token = token,
-            username = registerDto.Username
+            username = registerViewModel.Username
         });
     }
     
