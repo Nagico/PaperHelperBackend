@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaperHelper.Entities;
+using PaperHelper.Exceptions;
 using PaperHelper.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidAudience = builder.Configuration.GetSection("JWT")["ValidAudience"],
             ValidIssuer = builder.Configuration.GetSection("JWT")["ValidIssuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT")["IssuerSigningKey"]))
+            IssuerSigningKey =
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT")["IssuerSigningKey"]))
+        };
+        options.Events = new JwtBearerEvents
+        {
+            //权限验证失败后执行
+            OnChallenge = context =>
+            {
+                //终止默认的返回结果(必须有)
+                context.HandleResponse();
+                throw new AppError("A0310", "请登录后重试");
+            }
         };
     });
 
