@@ -1,12 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using PaperHelper.Entities;
-using PaperHelper.Entities.Entities;
-using PaperHelper.Exceptions;
 using PaperHelper.Services;
 using PaperHelper.ViewModels;
 
@@ -41,5 +35,13 @@ public class AuthenticateController : ControllerBase
     {
         var result = _service.Register(registerViewModel.Username, registerViewModel.Password, registerViewModel.Phone);
         return CreatedAtRoute("Login", result);
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("count/{username}", Name = "Count")]
+    public ActionResult Count(string username)
+    {
+        var result = _service.UsernameCount(username);
+        return Ok(new { count = result });
     }
 }
