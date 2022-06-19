@@ -9,7 +9,5 @@ public class RegisterViewModel
     [Required]
     public string Password { get; set; }
     [Required]
-    public string ConfirmPassword { get; set; }
-    [Required]
     public string Phone { get; set; }
 }
