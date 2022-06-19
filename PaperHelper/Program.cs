@@ -14,6 +14,19 @@ var connectionString = builder.Configuration.GetConnectionString("PaperHelperDat
 builder.Services.AddDbContext<PaperHelperContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+//跨域设置
+builder.Services.AddCors(option =>
+    option.AddPolicy("cors", policy =>
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins(
+                "http://localhost:8080", 
+                "http://127.0.0.1:8080"
+            )
+        )
+    );
+
 // Add JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -82,6 +95,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("cors");
+
 app.UseApiExceptionHandler();
 
 app.UseHttpsRedirection();
@@ -89,6 +104,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers()
+    .RequireCors("cors");
 
 app.Run();
