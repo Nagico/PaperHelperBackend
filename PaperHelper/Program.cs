@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaperHelper.Entities;
+using PaperHelper.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseApiExceptionHandler();
 
 app.UseHttpsRedirection();
 

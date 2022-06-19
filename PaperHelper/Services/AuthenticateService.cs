@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
@@ -27,11 +26,11 @@ public class AuthenticateService
     public AuthenticateViewModel Login(string username, string password)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-            throw new AppError("A0210", "用户登录失败", "请输入用户名和密码");
+            throw new AppError("A0210", "请输入用户名和密码");
         
         var user = _context.Users.FirstOrDefault(u => u.Username == username);
         if (user == null || !user.Password!.Equals(EncryptionUtil.Encrypt(password, _salt)))
-            throw new AppError("A0210", "用户登录失败", "用户名或密码错误");
+            throw new AppError("A0210", "用户名或密码错误");
         
         var token = GenerateJwt(username);
         
@@ -45,10 +44,10 @@ public class AuthenticateService
     public AuthenticateViewModel Register(string username, string password, string phone)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(phone))
-            throw new AppError("A0100", "用户注册错误", "请输入用户名、密码和手机号");
-        
+            throw new AppError("A0100", "请输入用户名、密码和手机号");
+
         if (UsernameCount(username) > 0)
-            throw new AppError("A0111", "用户名已存在");
+            throw new AppError("A0111", "用户名已存在，请重新输入");
 
         _context.Users.Add(new User {
             Username = username,
