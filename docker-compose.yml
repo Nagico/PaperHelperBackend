@@ -1,0 +1,30 @@
+﻿version: '3'
+services:
+  ### Redis container ##########################################
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/nagico/paper-helper-backend:redis
+    container_name: paper-helper-backend-redis
+    restart: always
+    networks:
+      net-aspnet:
+        ipv4_address: 10.10.11.5
+
+  ### ASPNET container #########################################
+  django:
+    image: registry.cn-hangzhou.aliyuncs.com/nagico/paper-helper-backend:aspnet
+    container_name: paper-helper-backend-aspnet
+    ports:
+      - "${HTTP_PORT}:80"
+    env_file: .env # ENV file
+    restart: always #系统重启后容器自动启动
+    privileged: true   #容器启动后是否有系统权限
+    networks: #定义该容器的网桥名称和IP地址
+      net-aspnet:
+        ipv4_address: 10.10.11.4
+
+### Add Network Bridge info #########################################
+networks:   #定义整个docker-compose编排的容器使用的网桥名称和IP地址网段，注意 x.x.x.1不能使用
+  net-aspnet:
+    ipam:
+      config:
+        - subnet: 10.10.11.0/24
