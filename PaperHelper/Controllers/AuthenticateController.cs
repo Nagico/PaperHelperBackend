@@ -8,7 +8,7 @@ namespace PaperHelper.Controllers;
 
 [ApiController]
 [Route("tokens")]
-public class AuthenticateController : ControllerBase
+public class AuthenticateController : BaseController
 {
     private readonly AuthenticateService _service;
     

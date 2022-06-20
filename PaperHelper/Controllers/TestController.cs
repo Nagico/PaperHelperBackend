@@ -6,15 +6,8 @@ namespace PaperHelper.Controllers;
 
 [ApiController]
 [Route("test")]
-public class TestController : ControllerBase
+public class TestController : BaseController
 {
-    private readonly PaperHelperContext _context;
-    
-    public TestController(PaperHelperContext context)
-    {
-        _context = context;
-    }
-    
     [HttpGet(Name = "Test")]
     public ActionResult Test()
     {

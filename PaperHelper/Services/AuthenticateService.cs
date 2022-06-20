@@ -32,7 +32,7 @@ public class AuthenticateService
         if (user == null || !user.Password!.Equals(EncryptionUtil.Encrypt(password, _salt)))
             throw new AppError("A0210", "用户名或密码错误");
         
-        var token = GenerateJwt(username);
+        var token = GenerateJwt(user);
         
         return new AuthenticateViewModel
         {
@@ -49,14 +49,17 @@ public class AuthenticateService
         if (UsernameCount(username) > 0)
             throw new AppError("A0111", "用户名已存在，请重新输入");
 
-        _context.Users.Add(new User {
+        var newUser = new User
+        {
             Username = username,
             Password = EncryptionUtil.Encrypt(password, _salt),
             Phone = phone
-        });
+        };
+        
+        _context.Users.Add(newUser);
         _context.SaveChanges();
         
-        var token = GenerateJwt(username);
+        var token = GenerateJwt(newUser);
         
         return new AuthenticateViewModel
         {
@@ -70,10 +73,10 @@ public class AuthenticateService
         return _context.Users.Count(u => u.Username == username);
     }
     
-    private string GenerateJwt(string username)
+    private string GenerateJwt(User user)
     {
         var claims = new[] {
-            new Claim(ClaimTypes.Name, username),
+            new Claim("UserId", user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Exp, $"{new DateTimeOffset(DateTime.Now.AddMinutes(Convert.ToInt32(_configuration.GetSection("JWT")["Expires"]))).ToUnixTimeSeconds()}"),
             new Claim(JwtRegisteredClaimNames.Nbf, $"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}")
         };

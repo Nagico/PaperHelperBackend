@@ -19,8 +19,24 @@ public class UserService
     {
         return _context.Users.Find(id);
     }
-
-    public JObject GetUserDetail(int id)
+    
+    public JObject GetUserPartDetail(int id)
+    {
+        var user = _context.Users.Find(id);
+        if (user == null)
+        {
+            return new JObject();
+        }
+        var res = JObject.FromObject(user);
+        res.Remove("password");
+        res.Remove("phone");
+        res.Remove("email");
+        res.Remove("last_login");
+        res.Remove("create_time");
+        return res;
+    }
+    
+    public JObject GetUserFullDetail(int id)
     {
         var user = _context.Users.Find(id);
         if (user == null)

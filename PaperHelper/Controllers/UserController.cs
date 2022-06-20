@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using PaperHelper.Entities;
 using PaperHelper.Services;
 
@@ -8,7 +10,7 @@ namespace PaperHelper.Controllers;
 [ApiController]
 [Route("users")]
 [Authorize]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly UserService _service;
     
@@ -20,8 +22,14 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUser")]
     public ActionResult GetUser()
     {
-        var id = 1;
-        var user = _service.GetUserDetail(id);
-        return Ok(user);
+        var userDetail = _service.GetUserFullDetail(UserId);
+        return Ok(userDetail);
+    }
+    
+    [HttpGet("{id}", Name = "GetUserById")]
+    public ActionResult GetUserById(int id)
+    {
+        var userDetail = UserId == id ? _service.GetUserFullDetail(id) : _service.GetUserPartDetail(id);
+        return Ok(userDetail);
     }
 }
