@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
+using PaperHelper.Exceptions;
+using PaperHelper.Services.Serializers;
 
 namespace PaperHelper.Services;
 
@@ -8,45 +10,49 @@ public class UserService
 {
     private readonly IConfiguration _configuration;
     private readonly PaperHelperContext _context;
+    private readonly UserSerializer _userSerializer;
+    private readonly ProjectSerializer _projectSerializer;
     
     public UserService(IConfiguration configuration, PaperHelperContext paperHelperContext)
     {
         _configuration = configuration;
         _context = paperHelperContext;
+        _userSerializer = new UserSerializer(_context);
+        _projectSerializer = new ProjectSerializer(_context);
     }
 
-    public User? GetUser(int id)
+    private User GetUser(int id)
     {
-        return _context.Users.Find(id);
+        var user = _context.Users.Find(id);
+        if (user == null)
+        {
+            throw new AppError("A0514");
+        }
+        return user;
     }
     
     public JObject GetUserPartDetail(int id)
     {
-        var user = _context.Users.Find(id);
-        if (user == null)
-        {
-            return new JObject();
-        }
-        var res = JObject.FromObject(user);
-        res.Remove("password");
-        res.Remove("phone");
-        res.Remove("email");
-        res.Remove("last_login");
-        res.Remove("create_time");
-        return res;
+        var user = GetUser(id);
+        
+        return _userSerializer.UserInfo(user);
     }
     
     public JObject GetUserFullDetail(int id)
     {
-        var user = _context.Users.Find(id);
-        if (user == null)
+        var user = GetUser(id);
+        
+        return _userSerializer.UserDetail(user);
+    }
+
+    public JArray GetUserProjects(int id)
+    {
+        var projects = _context.UserProjects.Where(x => x.UserId == id);
+        var res = new JArray();
+        foreach (var project in projects)
         {
-            return new JObject();
+            res.Add(_projectSerializer.ProjectInfo(project.Project));
         }
-        var projectNum = _context.UserProjects.Count(x => x.UserId == id);
-        var res = JObject.FromObject(user);
-        res.Remove("password");
-        res.Add("project_num", projectNum);
         return res;
     }
 }

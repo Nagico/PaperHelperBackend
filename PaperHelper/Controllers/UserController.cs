@@ -32,4 +32,13 @@ public class UserController : BaseController
         var userDetail = UserId == id ? _service.GetUserFullDetail(id) : _service.GetUserPartDetail(id);
         return Ok(userDetail);
     }
+    
+    [HttpGet("{id}/projects", Name = "GetUserProjects")]
+    public ActionResult GetUserProjects(int id)
+    {
+        var userProjects = _service.GetUserProjects(id);
+        return Ok(userProjects);
+    }
+    
+    
 }
