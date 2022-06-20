@@ -1,5 +1,5 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-RUN apt-get update && install -y curl
+RUN apt-get update && apt-get install -y curl
 WORKDIR /app
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=30s --retries=3 CMD curl localhost /test/ || exit 1
