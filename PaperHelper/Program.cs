@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using PaperHelper.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Extensions;
@@ -21,11 +23,14 @@ builder.Services.AddCors(option =>
             .AllowAnyMethod()
             .AllowCredentials()
             .WithOrigins(
-                "http://localhost:8080", 
-                "http://127.0.0.1:8080"
+                "http://localhost:8080",
+                "http://localhost:3000", 
+                "http://127.0.0.1:8080",
+                "http://127.0.0.1:3000"
             )
         )
     );
+
 
 // Add JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -58,8 +63,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Json serializer settings
+JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+{
+    Formatting = Formatting.None,
+    ContractResolver = new DefaultContractResolver
+    {
+        NamingStrategy = new SnakeCaseNamingStrategy
+        {
+            ProcessDictionaryKeys = true
+        }
+    }
+};
+
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Formatting = Formatting.None;
+        // 设置下划线方式，首字母是小写
+        options.SerializerSettings.ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new SnakeCaseNamingStrategy
+            {
+                ProcessDictionaryKeys = true
+            }
+        };
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

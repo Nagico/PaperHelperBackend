@@ -7,18 +7,14 @@ using PaperHelper.ViewModels;
 namespace PaperHelper.Controllers;
 
 [ApiController]
-[Route("api/tokens/")]
+[Route("tokens")]
 public class AuthenticateController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly PaperHelperContext _context;
     private readonly AuthenticateService _service;
     
     public AuthenticateController(IConfiguration configuration, PaperHelperContext paperHelperContext)
     {
-        _configuration = configuration;
-        _context = paperHelperContext;
-        _service = new AuthenticateService(_configuration, _context);
+        _service = new AuthenticateService(configuration, paperHelperContext);
     }
     
     [AllowAnonymous]

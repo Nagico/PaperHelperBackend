@@ -6,7 +6,16 @@ namespace PaperHelper.Entities;
 
 public class PaperHelperContext : DbContext
 {
+    public DbSet<Attachment> Attachments { get; set; }
+    public DbSet<Note> Notes { get; set; }
+    public DbSet<Paper> Papers { get; set; }
+    public DbSet<PaperReference> PaperReferences { get; set; }
+    public DbSet<PaperTag> PaperTags { get; set; }
+    public DbSet<Project> Projects { get; set; }
+    public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserProject> UserProjects { get; set; }
+
 
     public PaperHelperContext(DbContextOptions<PaperHelperContext> options) : base(options) { }
 
