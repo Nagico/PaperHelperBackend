@@ -37,7 +37,10 @@ public class AuthenticateService
         return new AuthenticateViewModel
         {
             Token = token,
-            Username = username
+            Username = username,
+            Id = user.Id,
+            Phone = user.Phone,
+            Avatar = user.Avatar
         };
     }
 
@@ -64,7 +67,10 @@ public class AuthenticateService
         return new AuthenticateViewModel
         {
             Token = token,
-            Username = username
+            Username = username,
+            Id = newUser.Id,
+            Phone = newUser.Phone,
+            Avatar = newUser.Avatar
         };
     }
     
