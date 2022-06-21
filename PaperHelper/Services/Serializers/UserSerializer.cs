@@ -8,7 +8,7 @@ public class UserSerializer : BaseSerializer
 {
     public UserSerializer(PaperHelperContext context) : base(context) {}
 
-    public JObject UserInfo(User user)
+    public JObject UserDetail(User user)
     {
         var res = JObject.FromObject(user);
         var projectNum = _context.UserProjects.Count(x => x.UserId == user.Id);
@@ -18,7 +18,7 @@ public class UserSerializer : BaseSerializer
         return res;
     }
     
-    public JObject UserDetail(User user)
+    public JObject UserInfo(User user)
     {
         var res = JObject.FromObject(user);
         
