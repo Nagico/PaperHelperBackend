@@ -1,4 +1,6 @@
-﻿namespace PaperHelper.Entities.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace PaperHelper.Entities.Entities;
 
 /// <summary>
 /// 论文
@@ -62,22 +64,27 @@ public class Paper
     /// <summary>
     /// 附件列表
     /// </summary>
+    [JsonIgnore]
     public List<Attachment>? Attachments { get; set; }
     /// <summary>
     /// 笔记列表
     /// </summary>
+    [JsonIgnore]
     public List<Note>? Notes { get; set; }
     /// <summary>
     /// 标签列表
     /// </summary>
+    [JsonIgnore]
     public List<PaperTag>? Tags { get; set; }
     /// <summary>
     /// 参考文献列表
     /// </summary>
+    [JsonIgnore]
     public List<PaperReference>? References { get; set; }
     /// <summary>
     /// 被引用列表
     /// </summary>
+    [JsonIgnore]
     public List<PaperReference>? ReferenceFrom { get; set; }
 
     public DateTime? CreateTime { get; set; }

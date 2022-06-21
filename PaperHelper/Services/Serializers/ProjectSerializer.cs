@@ -52,6 +52,8 @@ public class ProjectSerializer : BaseSerializer
     {
         var jObject = JObject.FromObject(project);
         var members = new JArray();
+        
+        // 项目成员
         foreach (var member in project.Members)
         {
             var user = _context.Users.Find(member.UserId);
@@ -70,6 +72,16 @@ public class ProjectSerializer : BaseSerializer
             }
         }
         jObject.Add("members", members);
+        
+        // 项目论文
+        var papers = new JArray();
+        var paperSerializer = new PaperSerializer(_context);
+        foreach (var paper in project.Papers)
+        {
+            papers.Add(paperSerializer.PaperInfo(paper));
+        }
+        jObject.Add("paper", papers);
+        
         return jObject;
     }
 }

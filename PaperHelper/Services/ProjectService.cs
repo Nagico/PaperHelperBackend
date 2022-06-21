@@ -84,7 +84,7 @@ public class ProjectService
     /// <exception cref="AppError">ID不存在</exception>
     private Project GetProject(int id)
     {
-        var project =  _context.Projects.Include("Members").FirstOrDefault(p => p.Id == id);
+        var project =  _context.Projects.Include("Members").Include("Papers").FirstOrDefault(p => p.Id == id);
         if (project == null)
         {
             throw new AppError("A0514");

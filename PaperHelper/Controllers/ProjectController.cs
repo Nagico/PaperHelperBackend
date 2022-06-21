@@ -12,10 +12,12 @@ namespace PaperHelper.Controllers;
 public class ProjectController : BaseController
 {
     private readonly ProjectService _projectService;
+    private readonly PaperService _paperService;
     
     public ProjectController(IConfiguration configuration, PaperHelperContext paperHelperContext)
     {
         _projectService = new ProjectService(configuration, paperHelperContext);
+        _paperService = new PaperService(configuration, paperHelperContext);
     }
     
     /// <summary>
@@ -117,4 +119,5 @@ public class ProjectController : BaseController
         var res = _projectService.TransOwner(id, userId, UserId);
         return Ok(res);
     }
+
 }
