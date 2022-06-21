@@ -19,4 +19,9 @@ public class ProjectSerializer : BaseSerializer
         };
         return jObject;
     }
+
+    // public JObject ProjectDetail(Project project)
+    // {
+    //     //var jObject = new 
+    // }
 }
