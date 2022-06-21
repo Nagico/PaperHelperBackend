@@ -20,8 +20,9 @@ public class ProjectSerializer : BaseSerializer
         return jObject;
     }
 
-    // public JObject ProjectDetail(Project project)
-    // {
-    //     //var jObject = new 
-    // }
+    public JObject ProjectDetail(Project project)
+    {
+        var jObject = JObject.FromObject(project);
+        return jObject;
+    }
 }

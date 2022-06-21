@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
+using PaperHelper.Exceptions;
 using PaperHelper.Services;
 using PaperHelper.Services.Serializers;
 
@@ -37,12 +38,15 @@ public class UserController : BaseController
         return Ok(userDetail);
     }
     
-    [HttpGet("{id}/projects", Name = "GetUserProjects")]
-    public ActionResult GetUserProjects(int id)
+    [HttpGet("{id}/projects", Name = "UserGetUserProjects")]
+    public ActionResult UserGetUserProjects(int id)
     {
+        if (UserId != id)
+        {
+            throw new AppError("A0312");
+        }
         var userProjects = _projectService.GetUserProjects(id);
         return Ok(userProjects);
     }
-    
-    
+
 }

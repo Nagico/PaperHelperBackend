@@ -42,9 +42,40 @@ public class ProjectService
         return res;
     }
 
-    // public JObject GetProjectDetail(int id)
-    // {
-    //         var project = GetProject(id);
-    //     return _projectSerializer.ProjectDetail(project);
-    // }
+    public JObject GetProjectDetail(int id)
+    {
+        var project = GetProject(id);
+        return _projectSerializer.ProjectDetail(project);
+    }
+
+    public JObject CreateProject(string? name, string? description, int userId)
+    {
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
+        {
+            throw new AppError("A0420");
+        }
+        var user = _context.Users.Find(userId);
+        if (user == null)
+        {
+            throw new AppError("A0300");
+        }
+        
+        var project = new Project
+        {
+            Name = name,
+            Description = description,
+            Members = new List<UserProject>(),
+            UpdateTime = DateTime.Now
+        };
+        project.Members.Add(new UserProject
+        {
+            User = user,
+            Project = project,
+            IsOwner = true,
+            AccessTime = DateTime.Now
+        });
+        _context.Projects.Add(project);
+        _context.SaveChanges();
+        return _projectSerializer.ProjectDetail(project);
+    }
 }
