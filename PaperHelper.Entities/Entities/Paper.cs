@@ -8,6 +8,13 @@ public class Paper
     public int Id { get; set; }
     
     /// <summary>
+    /// 所属项目
+    /// </summary>
+    public int ProjectId { get; set; }
+    public virtual Project Project { get; set; }
+    
+    
+    /// <summary>
     /// 论文标题
     /// </summary>
     public string? Title { get; set; }

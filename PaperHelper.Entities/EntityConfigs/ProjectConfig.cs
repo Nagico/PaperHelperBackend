@@ -30,6 +30,10 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");
+        
+        builder.HasMany(x => x.Papers)
+            .WithOne(x => x.Project)
+            .HasForeignKey(x => x.ProjectId);
 
     }
 }

@@ -22,6 +22,12 @@ public class Project
     public string? InvitationCode { get; set; }
     
     /// <summary>
+    /// 项目论文列表
+    /// </summary>
+    [JsonIgnore]
+    public List<Paper>? Papers { get; set; }
+    
+    /// <summary>
     /// 项目成员列表
     /// </summary>
     [JsonIgnore]

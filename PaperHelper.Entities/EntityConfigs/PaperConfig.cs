@@ -15,6 +15,10 @@ public class PaperConfig : IEntityTypeConfiguration<Paper>
             .HasColumnName("id")
             .ValueGeneratedOnAdd();
 
+        builder.Property(x => x.ProjectId)
+            .HasColumnName("project_id")
+            .IsRequired();
+
         builder.Property(x => x.Title)
             .HasColumnName("title")
             .IsRequired();
@@ -61,6 +65,5 @@ public class PaperConfig : IEntityTypeConfiguration<Paper>
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");
-
     }
 }
