@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
@@ -23,7 +24,7 @@ public class ProjectService
     
     private Project GetProject(int id)
     {
-        var project =  _context.Projects.Find(id);
+        var project =  _context.Projects.Include("Members").FirstOrDefault(p => p.Id == id);
         if (project == null)
         {
             throw new AppError("A0514");
@@ -35,9 +36,8 @@ public class ProjectService
     {
         var projectIds = _context.UserProjects.Where(x => x.UserId == userId).ToList();
         var res = new JArray();
-        foreach (var projectId in projectIds)
+        foreach (var project in projectIds.Select(projectId => GetProject(projectId.ProjectId)))
         {
-            var project = GetProject(projectId.ProjectId);
             res.Add(_projectSerializer.ProjectInfo(project));
         }
         return res;
@@ -98,9 +98,13 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
 
-    public JObject AddMember(int id, int userId)
+    public JObject AddMember(int id, int userId, int currentUserId)
     {
         var project = GetProject(id);
+        if (!project.Members.Any(x => x.UserId == userId))
+        {
+            throw new AppError("A0312");
+        }
         var user = _context.Users.Find(userId);
         if (user == null)
         {
@@ -108,7 +112,7 @@ public class ProjectService
         }
         if (project.Members.Any(x => x.UserId == userId))
         {
-            throw new AppError("A0430", "用户已加入");
+            throw new AppError("A0430", "用户重复加入");
         }
         project.Members.Add(new UserProject
         {
@@ -123,15 +127,19 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
     
-    public JObject RemoveMember(int id, int userId)
+    public JObject RemoveMember(int id, int userId, int currentUserId)
     {
         var project = GetProject(id);
+        if (!project.Members.Any(x => x.UserId == userId))
+        {
+            throw new AppError("A0312");
+        }
         var user = _context.Users.Find(userId);
         if (user == null)
         {
             throw new AppError("A0430", "用户不存在");
         }
-        if (!project.Members.Any(x => x.UserId == userId))
+        if (project.Members.All(x => x.UserId != userId))
         {
             throw new AppError("A0430", "用户未加入");
         }
@@ -142,9 +150,13 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
     
-    public void DeleteProject(int id)
+    public void DeleteProject(int id, int userId)
     {
         var project = GetProject(id);
+        if (!project.Members.Any(x => x.UserId == userId && x.IsOwner))
+        {
+            throw new AppError("A0430", "仅所有者能删除项目");
+        }
         _context.UserProjects.RemoveRange(_context.UserProjects.Where(x => x.ProjectId == id));
         _context.Projects.Remove(project);
         _context.SaveChanges();

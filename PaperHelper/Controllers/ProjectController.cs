@@ -49,7 +49,21 @@ public class ProjectController : BaseController
     [HttpDelete("{id}", Name = "DeleteProject")]
     public ActionResult DeleteProject(int id)
     {
-        _projectService.DeleteProject(id);
+        _projectService.DeleteProject(id, UserId);
+        return NoContent();
+    }
+    
+    [HttpPost("{id}/members/{userId}", Name = "AddMemberToProject")]
+    public ActionResult AddMemberToProject(int id, int userId)
+    {
+        var newMember = _projectService.AddMember(id, userId, UserId);
+        return Created($"/projects/{id}", newMember);
+    }
+    
+    [HttpDelete("{id}/members/{userId}", Name = "RemoveMemberFromProject")]
+    public ActionResult RemoveMemberFromProject(int id, int userId)
+    {
+        _projectService.RemoveMember(id, userId, UserId);
         return NoContent();
     }
 }
