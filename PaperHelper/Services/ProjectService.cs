@@ -4,6 +4,7 @@ using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Services.Serializers;
+using PaperHelper.Utils;
 
 namespace PaperHelper.Services;
 
@@ -93,7 +94,8 @@ public class ProjectService
             Description = description,
             Members = new List<UserProject>(),
             UpdateTime = DateTime.Now,
-            CreateTime = DateTime.Now
+            CreateTime = DateTime.Now,
+            InvitationCode = CodeUtil.GenInvitationCode(8)
         };
         project.Members.Add(new UserProject
         {

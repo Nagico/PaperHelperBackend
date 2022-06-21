@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
@@ -49,4 +50,20 @@ public class UserController : BaseController
         return Ok(userProjects);
     }
 
+    [HttpPost("{id}/projects", Name = "UserJoinProject")]
+    public ActionResult UserJoinProject(int id, [FromBody] JObject body)
+    {
+        if (UserId != id)
+        {
+            throw new AppError("A0312");
+        }
+        var code = body.GetValue("invitation_code");
+        if (code == null)
+        {
+            throw new AppError("A0312");
+        }
+        var res = _userService.JoinProject(id, code.ToString());
+
+        return Ok(res);
+    }
 }

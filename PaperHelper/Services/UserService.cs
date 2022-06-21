@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
@@ -43,5 +44,34 @@ public class UserService
         var user = GetUser(id);
         
         return _userSerializer.UserDetail(user);
+    }
+    
+    public JObject JoinProject(int id, string invitationCode)
+    {
+        var project = _context.Projects.Include("Members").First(x => x.InvitationCode == invitationCode);
+        var user = _context.Users.Find(id);
+        if (project == null)
+        {
+            throw new AppError("A0430", "邀请码错误");
+        }
+        if (user == null)
+        {
+            throw new AppError("A0430", "用户不存在");
+        }
+        if (project.Members.Any(x => x.UserId == id))
+        {
+            throw new AppError("A0430", "用户重复加入");
+        }
+        project.Members.Add(new UserProject
+        {
+            User = user,
+            Project = project,
+            IsOwner = false,
+            AccessTime = DateTime.Now,
+            CreateTime = DateTime.Now
+        });
+        project.UpdateTime = DateTime.Now;
+        _context.SaveChanges();
+        return _projectSerializer.ProjectDetail(project);
     }
 }

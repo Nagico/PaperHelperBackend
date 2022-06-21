@@ -21,6 +21,9 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
 
         builder.Property(x => x.Description)
             .HasColumnName("description");
+        builder.Property(x => x.InvitationCode)
+            .HasColumnName("invitation_code")
+            .IsRequired();
 
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time");
