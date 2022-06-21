@@ -132,7 +132,7 @@ public class ProjectService
     public JObject CreateProject(string? name, string? description, int userId)
     {
         // 参数校验
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(name))
         {
             throw new AppError("A0420");
         }
