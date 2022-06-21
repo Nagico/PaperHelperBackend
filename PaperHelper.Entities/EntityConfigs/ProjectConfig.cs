@@ -23,8 +23,7 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             .HasColumnName("description");
 
         builder.Property(x => x.CreateTime)
-            .HasColumnName("create_time")
-            .ValueGeneratedOnAdd();
+            .HasColumnName("create_time");
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");

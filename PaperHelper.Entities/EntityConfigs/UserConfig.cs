@@ -39,7 +39,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .HasColumnName("last_login");
 
         builder.Property(x => x.CreateTime)
-            .HasColumnName("create_time")
-            .ValueGeneratedOnAdd();
+            .HasColumnName("create_time");
     }
 }

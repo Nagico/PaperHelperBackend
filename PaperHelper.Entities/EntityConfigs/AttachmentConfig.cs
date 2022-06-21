@@ -35,8 +35,7 @@ public class AttachmentConfig : IEntityTypeConfiguration<Attachment>
             .HasColumnName("paper_id");
 
         builder.Property(x => x.CreateTime)
-            .HasColumnName("create_time")
-            .ValueGeneratedOnAdd();
+            .HasColumnName("create_time");
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");

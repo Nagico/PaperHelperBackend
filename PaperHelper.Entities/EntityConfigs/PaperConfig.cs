@@ -55,10 +55,9 @@ public class PaperConfig : IEntityTypeConfiguration<Paper>
         
         builder.Property(x=>x.Doi)
             .HasColumnName("doi");
-        
+
         builder.Property(x => x.CreateTime)
-            .HasColumnName("create_time")
-            .ValueGeneratedOnAdd();
+            .HasColumnName("create_time");
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");

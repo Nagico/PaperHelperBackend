@@ -35,8 +35,7 @@ public class UserProjectConfig : IEntityTypeConfiguration<UserProject>
             .HasColumnName("edit_time");
 
         builder.Property(x => x.CreateTime)
-            .HasColumnName("create_time")
-            .ValueGeneratedOnAdd();
+            .HasColumnName("create_time");
         
         builder.HasOne(x => x.User)
             .WithMany(u => u.UserProjects)

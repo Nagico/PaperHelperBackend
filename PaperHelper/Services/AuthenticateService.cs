@@ -33,7 +33,10 @@ public class AuthenticateService
             throw new AppError("A0210", "用户名或密码错误");
         
         var token = GenerateJwt(user);
-        
+
+        user.LastLogin = DateTime.Now;
+        _context.SaveChanges();
+
         return new AuthenticateViewModel
         {
             Token = token,
@@ -56,7 +59,9 @@ public class AuthenticateService
         {
             Username = username,
             Password = EncryptionUtil.Encrypt(password, _salt),
-            Phone = phone
+            Phone = phone,
+            CreateTime = DateTime.Now,
+            LastLogin = DateTime.Now
         };
         
         _context.Users.Add(newUser);
