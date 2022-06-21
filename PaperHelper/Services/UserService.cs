@@ -75,10 +75,11 @@ public class UserService
     public JObject JoinProject(int id, string invitationCode)
     {
         // 查找邀请码对应的项目
-        var project = _context.Projects.Include("Members").First(x => x.InvitationCode == invitationCode);
+        var project = _context.Projects.Include("Members").FirstOrDefault(x => x.InvitationCode == invitationCode);
+        
         if (project == null)
         {
-            throw new AppError("A0430", "邀请码错误");
+            throw new AppError("A0430", "邀请码不存在");
         }
         
         // 查找用户
