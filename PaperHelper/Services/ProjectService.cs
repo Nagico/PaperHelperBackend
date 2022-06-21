@@ -142,12 +142,11 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
     
-    public JObject DeleteProject(int id)
+    public void DeleteProject(int id)
     {
         var project = GetProject(id);
-        _context.UserProjects.RemoveRange(project.Members);
+        _context.UserProjects.RemoveRange(_context.UserProjects.Where(x => x.ProjectId == id));
         _context.Projects.Remove(project);
         _context.SaveChanges();
-        return _projectSerializer.ProjectDetail(project);
     }
 }

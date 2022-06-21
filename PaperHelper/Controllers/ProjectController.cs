@@ -45,4 +45,11 @@ public class ProjectController : BaseController
         var updatedProject = _projectService.UpdateProjectInfo(id, project.Name, project.Description);
         return Ok(updatedProject);
     }
+    
+    [HttpDelete("{id}", Name = "DeleteProject")]
+    public ActionResult DeleteProject(int id)
+    {
+        _projectService.DeleteProject(id);
+        return NoContent();
+    }
 }
