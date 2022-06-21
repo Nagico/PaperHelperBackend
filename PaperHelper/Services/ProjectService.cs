@@ -22,6 +22,32 @@ public class ProjectService
         _projectSerializer = new ProjectSerializer(_context);
     }
     
+    private bool IsMember(Project project, int userId)
+    {
+        return project.Members.Any(member => member.UserId == userId);
+    }
+    
+    private bool IsOwner(Project project, int userId)
+    {
+        return project.Members.Any(member => member.UserId == userId && member.IsOwner);
+    }
+    
+    private void CheckMember(Project project, int userId)
+    {
+        if (!IsMember(project, userId))
+        {
+            throw new AppError("A0312", "非项目成员");
+        }
+    }
+    
+    private void CheckOwner(Project project, int userId)
+    {
+        if (!IsOwner(project, userId))
+        {
+            throw new AppError("A0313", "非项目所有者");
+        }
+    }
+    
     private Project GetProject(int id)
     {
         var project =  _context.Projects.Include("Members").FirstOrDefault(p => p.Id == id);
@@ -82,9 +108,10 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
 
-    public JObject UpdateProjectInfo(int id, string? projectName, string? projectDescription)
+    public JObject UpdateProjectInfo(int id, string? projectName, string? projectDescription, int loginUserId)
     {
         var project = GetProject(id);
+        CheckMember(project, loginUserId);
         if (projectName != null)
         {
             project.Name = projectName;
@@ -98,13 +125,10 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
 
-    public JObject AddMember(int id, int userId, int currentUserId)
+    public JObject AddMember(int id, int userId, int loginUserId)
     {
         var project = GetProject(id);
-        if (!project.Members.Any(x => x.UserId == userId))
-        {
-            throw new AppError("A0312");
-        }
+        CheckMember(project, loginUserId);
         var user = _context.Users.Find(userId);
         if (user == null)
         {
@@ -127,12 +151,13 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
     
-    public JObject RemoveMember(int id, int userId, int currentUserId)
+    public JObject RemoveMember(int id, int userId, int loginUserId)
     {
         var project = GetProject(id);
-        if (!project.Members.Any(x => x.UserId == userId))
+        CheckMember(project, loginUserId);
+        if (IsOwner(project, loginUserId))
         {
-            throw new AppError("A0312");
+            throw new AppError("A0430", "项目所有者不能移除");
         }
         var user = _context.Users.Find(userId);
         if (user == null)
@@ -150,15 +175,23 @@ public class ProjectService
         return _projectSerializer.ProjectDetail(project);
     }
     
-    public void DeleteProject(int id, int userId)
+    public void DeleteProject(int id, int loginUserId)
     {
         var project = GetProject(id);
-        if (!project.Members.Any(x => x.UserId == userId && x.IsOwner))
-        {
-            throw new AppError("A0430", "仅所有者能删除项目");
-        }
+        CheckOwner(project, loginUserId);
         _context.UserProjects.RemoveRange(_context.UserProjects.Where(x => x.ProjectId == id));
         _context.Projects.Remove(project);
         _context.SaveChanges();
+    }
+    
+    public JObject TransOwner(int id, int userId, int loginUserId)
+    {
+        var project = GetProject(id);
+        CheckOwner(project, loginUserId);
+        project.Members.First(x => x.UserId == userId).IsOwner = true;
+        project.Members.First(x => x.UserId == loginUserId).IsOwner = false;
+        project.UpdateTime = DateTime.Now;
+        _context.SaveChanges();
+        return _projectSerializer.ProjectDetail(project);
     }
 }

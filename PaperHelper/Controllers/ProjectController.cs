@@ -42,7 +42,7 @@ public class ProjectController : BaseController
     [HttpPut("{id}", Name = "UpdateProjectInfo")]
     public ActionResult UpdateProjectInfo(int id, [FromBody] Project project)
     {
-        var updatedProject = _projectService.UpdateProjectInfo(id, project.Name, project.Description);
+        var updatedProject = _projectService.UpdateProjectInfo(id, project.Name, project.Description, UserId);
         return Ok(updatedProject);
     }
     
@@ -65,5 +65,12 @@ public class ProjectController : BaseController
     {
         _projectService.RemoveMember(id, userId, UserId);
         return NoContent();
+    }
+    
+    [HttpPut("{id}/owners/{userId}", Name = "TransProjectOwner")]
+    public ActionResult TransProjectOwner(int id, int userId)
+    {
+        var res = _projectService.TransOwner(id, userId, UserId);
+        return Ok(res);
     }
 }

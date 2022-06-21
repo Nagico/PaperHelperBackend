@@ -24,7 +24,6 @@ public class UserSerializer : BaseSerializer
         
         res.Remove("password");
         res.Remove("phone");
-        res.Remove("email");
         res.Remove("last_login");
         res.Remove("create_time");
         return res;

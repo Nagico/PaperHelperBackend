@@ -44,15 +44,4 @@ public class UserService
         
         return _userSerializer.UserDetail(user);
     }
-
-    public JArray GetUserProjects(int id)
-    {
-        var projects = _context.UserProjects.Where(x => x.UserId == id);
-        var res = new JArray();
-        foreach (var project in projects)
-        {
-            res.Add(_projectSerializer.ProjectInfo(project.Project));
-        }
-        return res;
-    }
 }
