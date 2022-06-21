@@ -37,8 +37,7 @@ public class NoteConfig : IEntityTypeConfiguration<Note>
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.UpdateTime)
-            .HasColumnName("update_time")
-            .ValueGeneratedOnAddOrUpdate();
+            .HasColumnName("update_time");
         
         builder.HasOne(x => x.Project)
             .WithMany(x => x.Notes)

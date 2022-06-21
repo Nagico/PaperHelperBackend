@@ -39,9 +39,8 @@ public class AttachmentConfig : IEntityTypeConfiguration<Attachment>
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.UpdateTime)
-            .HasColumnName("update_time")
-            .ValueGeneratedOnAddOrUpdate();
-        
+            .HasColumnName("update_time");
+
         builder.HasOne(x => x.Project)
             .WithMany(x => x.Attachments)
             .HasForeignKey(x => x.ProjectId);

@@ -25,10 +25,9 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time")
             .ValueGeneratedOnAdd();
-        
+
         builder.Property(x => x.UpdateTime)
-            .HasColumnName("update_time")
-            .ValueGeneratedOnAddOrUpdate();
+            .HasColumnName("update_time");
 
     }
 }

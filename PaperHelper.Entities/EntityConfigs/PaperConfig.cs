@@ -61,8 +61,7 @@ public class PaperConfig : IEntityTypeConfiguration<Paper>
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.UpdateTime)
-            .HasColumnName("update_time")
-            .ValueGeneratedOnAddOrUpdate();
-        
+            .HasColumnName("update_time");
+
     }
 }
