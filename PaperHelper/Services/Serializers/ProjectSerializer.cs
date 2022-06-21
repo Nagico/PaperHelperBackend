@@ -4,10 +4,18 @@ using PaperHelper.Entities.Entities;
 
 namespace PaperHelper.Services.Serializers;
 
+/// <summary>
+/// 项目序列化器
+/// </summary>
 public class ProjectSerializer : BaseSerializer
 {
     public ProjectSerializer(PaperHelperContext context) : base(context) {}
-
+    
+    /// <summary>
+    /// 获取项目简要信息
+    /// </summary>
+    /// <param name="project">项目</param>
+    /// <returns>JSON列表</returns>
     public JObject ProjectInfo(Project project)
     {
         var jObject = new JObject
@@ -34,7 +42,12 @@ public class ProjectSerializer : BaseSerializer
         jObject.Add("members", members);
         return jObject;
     }
-
+    
+    /// <summary>
+    /// 获取项目详细信息
+    /// </summary>
+    /// <param name="project">项目</param>
+    /// <returns>JSON对象</returns>
     public JObject ProjectDetail(Project project)
     {
         var jObject = JObject.FromObject(project);

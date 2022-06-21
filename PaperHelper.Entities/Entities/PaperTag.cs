@@ -1,5 +1,8 @@
 ﻿namespace PaperHelper.Entities.Entities;
 
+/// <summary>
+/// 论文标签关系
+/// </summary>
 public class PaperTag
 {
     public int Id { get; set; }

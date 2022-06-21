@@ -2,6 +2,9 @@
 
 namespace PaperHelper.ViewModels;
 
+/// <summary>
+/// 登录数据
+/// </summary>
 public class LoginViewModel
 {
     [Required]

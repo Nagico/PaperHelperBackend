@@ -5,6 +5,9 @@ using PaperHelper.Exceptions;
 
 namespace PaperHelper.Extensions;
 
+/// <summary>
+/// 自定义异常处理
+/// </summary>
 public static class ExceptionHandlingExtensions
 {
     private static JObject? _error = null;

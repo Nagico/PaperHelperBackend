@@ -4,6 +4,9 @@ using PaperHelper.Entities.Entities;
 
 namespace PaperHelper.Entities;
 
+/// <summary>
+/// 数据库管理类
+/// </summary>
 public class PaperHelperContext : DbContext
 {
     public DbSet<Attachment> Attachments { get; set; }

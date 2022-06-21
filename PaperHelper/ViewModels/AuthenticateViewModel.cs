@@ -1,5 +1,8 @@
 ﻿namespace PaperHelper.ViewModels;
 
+/// <summary>
+/// 登录返回数据
+/// </summary>
 public class AuthenticateViewModel
 {
     public int Id { get; set; }

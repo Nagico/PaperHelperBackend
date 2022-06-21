@@ -8,6 +8,10 @@ namespace PaperHelper.Controllers;
 [Route("test")]
 public class TestController : BaseController
 {
+    /// <summary>
+    /// 匿名测试接口
+    /// </summary>
+    /// <returns>测试结果</returns>
     [HttpGet(Name = "Test")]
     public ActionResult Test()
     {
@@ -18,6 +22,10 @@ public class TestController : BaseController
         };
     }
     
+    /// <summary>
+    /// 认证用户测试接口
+    /// </summary>
+    /// <returns>用户名及结果</returns>
     [HttpGet("user", Name = "TestLoginUser")]
     [Authorize]
     public ActionResult TestLoginUser()

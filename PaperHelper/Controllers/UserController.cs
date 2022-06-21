@@ -1,13 +1,9 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
-using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Services;
-using PaperHelper.Services.Serializers;
 
 namespace PaperHelper.Controllers;
 
@@ -25,6 +21,10 @@ public class UserController : BaseController
         _projectService = new ProjectService(configuration, paperHelperContext);
     }
     
+    /// <summary>
+    /// 获取当前用户详情
+    /// </summary>
+    /// <returns>用户信息</returns>
     [HttpGet(Name = "GetUser")]
     public ActionResult GetUser()
     {
@@ -32,6 +32,11 @@ public class UserController : BaseController
         return Ok(userDetail);
     }
     
+    /// <summary>
+    /// 获取指定ID用户信息
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <returns>用户信息</returns>
     [HttpGet("{id}", Name = "GetUserById")]
     public ActionResult GetUserById(int id)
     {
@@ -39,6 +44,12 @@ public class UserController : BaseController
         return Ok(userDetail);
     }
     
+    /// <summary>
+    /// 获取用户项目列表
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <returns>项目信息列表</returns>
+    /// <exception cref="AppError">无权限</exception>
     [HttpGet("{id}/projects", Name = "UserGetUserProjects")]
     public ActionResult UserGetUserProjects(int id)
     {
@@ -49,7 +60,14 @@ public class UserController : BaseController
         var userProjects = _projectService.GetUserProjects(id);
         return Ok(userProjects);
     }
-
+    
+    /// <summary>
+    /// 加入项目
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="body">邀请码</param>
+    /// <returns>项目详情</returns>
+    /// <exception cref="AppError">无权限</exception>
     [HttpPost("{id}/projects", Name = "UserJoinProject")]
     public ActionResult UserJoinProject(int id, [FromBody] JObject body)
     {

@@ -2,6 +2,9 @@
 
 namespace PaperHelper.ViewModels;
 
+/// <summary>
+/// 注册模型
+/// </summary>
 public class RegisterViewModel
 {
     [Required]
