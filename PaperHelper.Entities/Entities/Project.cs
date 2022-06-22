@@ -32,11 +32,7 @@ public class Project
     /// </summary>
     [JsonIgnore]
     public List<UserProject>? Members { get; set; }
-    /// <summary>
-    /// 项目附件列表
-    /// </summary>
-    [JsonIgnore]
-    public List<Attachment>? Attachments { get; set; }
+    
     /// <summary>
     /// 项目笔记列表
     /// </summary>

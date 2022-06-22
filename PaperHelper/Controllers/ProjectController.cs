@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Services;
@@ -13,11 +14,13 @@ public class ProjectController : BaseController
 {
     private readonly ProjectService _projectService;
     private readonly PaperService _paperService;
+    private readonly AttachmentService _attachmentService;
     
     public ProjectController(IConfiguration configuration, PaperHelperContext paperHelperContext)
     {
         _projectService = new ProjectService(configuration, paperHelperContext);
         _paperService = new PaperService(configuration, paperHelperContext);
+        _attachmentService = new AttachmentService(configuration, paperHelperContext);
     }
     
     /// <summary>
@@ -36,7 +39,7 @@ public class ProjectController : BaseController
     /// </summary>
     /// <param name="id">项目ID</param>
     /// <returns>项目内容</returns>
-    [HttpGet("{id}", Name = "GetProject")]
+    [HttpGet("{id:int}", Name = "GetProject")]
     public ActionResult GetProject(int id)
     {
         var project = _projectService.GetProjectDetail(id);
@@ -61,7 +64,7 @@ public class ProjectController : BaseController
     /// <param name="id">项目ID</param>
     /// <param name="project">修改后内容</param>
     /// <returns></returns>
-    [HttpPut("{id}", Name = "UpdateProjectInfo")]
+    [HttpPut("{id:int}", Name = "UpdateProjectInfo")]
     public ActionResult UpdateProjectInfo(int id, [FromBody] Project project)
     {
         var updatedProject = _projectService.UpdateProjectInfo(id, project.Name, project.Description, UserId);
@@ -73,7 +76,7 @@ public class ProjectController : BaseController
     /// </summary>
     /// <param name="id">项目ID</param>
     /// <returns></returns>
-    [HttpDelete("{id}", Name = "DeleteProject")]
+    [HttpDelete("{id:int}", Name = "DeleteProject")]
     public ActionResult DeleteProject(int id)
     {
         _projectService.DeleteProject(id, UserId);
@@ -87,7 +90,7 @@ public class ProjectController : BaseController
     /// <param name="userId">成员ID</param>
     /// <returns>项目详情</returns>
     [Obsolete("接口弃用，添加用户请使用邀请码", true)]
-    [HttpPost("{id}/members/{userId}", Name = "AddMemberToProject")]
+    [HttpPost("{id:int}/members/{userId:int}", Name = "AddMemberToProject")]
     public ActionResult AddMemberToProject(int id, int userId)
     {
         var newMember = _projectService.AddMember(id, userId, UserId);
@@ -100,7 +103,7 @@ public class ProjectController : BaseController
     /// <param name="id">项目ID</param>
     /// <param name="userId">成员ID</param>
     /// <returns>空</returns>
-    [HttpDelete("{id}/members/{userId}", Name = "RemoveMemberFromProject")]
+    [HttpDelete("{id:int}/members/{userId:int}", Name = "RemoveMemberFromProject")]
     public ActionResult RemoveMemberFromProject(int id, int userId)
     {
         _projectService.RemoveMember(id, userId, UserId);
@@ -113,11 +116,18 @@ public class ProjectController : BaseController
     /// <param name="id">项目ID</param>
     /// <param name="userId">新所有者ID</param>
     /// <returns>项目详情</returns>
-    [HttpPut("{id}/owners/{userId}", Name = "TransProjectOwner")]
+    [HttpPut("{id:int}/owners/{userId:int}", Name = "TransProjectOwner")]
     public ActionResult TransProjectOwner(int id, int userId)
     {
         var res = _projectService.TransOwner(id, userId, UserId);
         return Ok(res);
+    }
+    
+    [HttpPost("{projectId:int}/attachments", Name = "CreatePaperByAttachment")]
+    public IActionResult CreatePaperByAttachment(int projectId, string filename, string extname, IFormFile file)
+    {
+        var paper = _paperService.CreatePaperWithAttachment(projectId, filename, extname, file);
+        return Created($"/papers/{paper["id"]}", paper);
     }
 
 }
