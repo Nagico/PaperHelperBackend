@@ -61,6 +61,7 @@ public class Paper
     /// </summary>
     public string? Doi { get; set; }
     
+    [JsonIgnore]
     public int AttachmentId { get; set; }
     public virtual Attachment? Attachment { get; set; }
     

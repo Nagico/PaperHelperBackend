@@ -50,7 +50,8 @@ public class PaperSerializer : BaseSerializer
                 references.Add(PaperInfo(refPaper));
             }
         }
-        paperDetail.Add("references", references);
+
+        paperDetail["references"] = references;
         
         // 添加被引用信息
         var referenceFrom = new JArray();
@@ -62,22 +63,18 @@ public class PaperSerializer : BaseSerializer
                 references.Add(PaperInfo(refPaper));
             }
         }
-        paperDetail.Add("reference_from", referenceFrom);
+
+        paperDetail["reference_from"] = referenceFrom;
         
         // TODO: 添加标签
         var tags = new JArray();
-        
-        paperDetail.Add("tag", tags);
-        
-        // TODO: 添加附件
-        var attachments = new JArray();
-        
-        paperDetail.Add("attachment", attachments);
-        
+
+        paperDetail["tag"] = tags;
+
         // TODO: 添加笔记
         var notes = new JArray();
-        
-        paperDetail.Add("note", notes);
+
+        paperDetail["note"] = notes;
 
         return paperDetail;
     }

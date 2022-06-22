@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
@@ -27,14 +28,17 @@ public class PaperService
     }
     
     /// <summary>
-    /// 获取论文对象
+    /// 获取详细论文对象
     /// </summary>
     /// <param name="id">论文ID</param>
     /// <returns>论文对象</returns>
     /// <exception cref="Exception"></exception>
     private Paper GetPaper(int id)
     {
-        var paper = _context.Papers.Find(id);
+        var paper = _context.Papers
+            .Include("References").Include("ReferenceFrom")
+            .Include("Tags").Include("Notes").Include("Attachment")
+            .First(x => x.Id == id);
         if (paper == null)
         {
             throw new AppError("A0510");
@@ -68,4 +72,34 @@ public class PaperService
         var paper = GetPaper(paperId);
         return _paperSerializer.PaperDetail(paper);
     }
+    
+    /// <summary>
+    /// 通过上传附件添加论文
+    /// </summary>
+    /// <param name="projectId">论文ID</param>
+    /// <param name="fileName">文件名</param>
+    /// <param name="extName">扩展名</param>
+    /// <param name="formFile">文件</param>
+    /// <returns></returns>
+    public JObject CreatePaperWithAttachment(int projectId, string fileName, string extName, IFormFile formFile)
+    {
+        var attachmentService = new AttachmentService(_configuration, _context);
+        var attachment = attachmentService.CreateAttachment(projectId, fileName, extName, formFile);
+        
+        var paper = new Paper
+        {
+            ProjectId = projectId,
+            Title = fileName,
+            CreateTime = DateTime.Now,
+            UpdateTime = DateTime.Now,
+            AttachmentId = attachment.Id
+        };
+        _context.Papers.Add(paper);
+        _context.SaveChanges();
+        
+        paper = GetPaper(paper.Id);
+        
+        return _paperSerializer.PaperDetail(paper);
+    }
+    
 }
