@@ -47,7 +47,10 @@ public class AliYunOssUtil
         {
             var filename =  DateTime.Now.ToString("yyyyMMddHHmmssffffff") + Path.GetExtension(file.FileName);
             var key = Path.Combine(path, filename).Replace('\\', '/');
-            key = key.Substring(1, key.Length - 1);
+            if (key.StartsWith("/"))
+            {
+                key = key[1..];
+            }
             using (var stream = file.OpenReadStream())
             {
                 _writeClient.PutObject(_bucket, key, stream);
@@ -65,7 +68,10 @@ public class AliYunOssUtil
     public void DeleteFile(string path, string filename)
     {
         var key = Path.Combine(path, filename).Replace('\\', '/');
-        key = key.Substring(1, key.Length - 1);
+        if (key.StartsWith("/"))
+        {
+            key = key[1..];
+        }
         try
         {
             _writeClient.DeleteObject(_bucket, key);
