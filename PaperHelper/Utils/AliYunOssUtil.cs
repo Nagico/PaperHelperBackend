@@ -21,13 +21,14 @@ public class AliYunOssUtil
     private readonly OssClient _writeClient;
     private readonly OssClient _readClient;
     
-    public AliYunOssUtil(string accessKeyId, 
-        string accessKeySecret, string endpoint, string bucket)
+    public AliYunOssUtil(IConfiguration configuration)
     {
-        _endpoint = endpoint;
-        _accessKeyId = accessKeyId;
-        _accessKeySecret = accessKeySecret;
-        _bucket = bucket;
+        var aliYunConfig = configuration.GetSection("AliYun");
+
+        _accessKeyId = aliYunConfig["AccessKeyId"];
+        _accessKeySecret = aliYunConfig["AccessKeySecret"];
+        _endpoint = aliYunConfig["Endpoint"];
+        _bucket = aliYunConfig["Bucket"];
 
         // 初始化client
         _writeClient = new OssClient(_endpoint, _accessKeyId, _accessKeySecret);
@@ -44,13 +45,15 @@ public class AliYunOssUtil
     {
         try
         {
-            var fileName =  DateTime.Now.ToString("yyyyMMddHHmmssffffff") + Path.GetExtension(file.FileName);
+            var filename =  DateTime.Now.ToString("yyyyMMddHHmmssffffff") + Path.GetExtension(file.FileName);
+            var key = Path.Combine(path, filename).Replace('\\', '/');
+            key = key.Substring(1, key.Length - 1);
             using (var stream = file.OpenReadStream())
             {
-                _writeClient.PutObject(_bucket, path + '/' + fileName, stream);
+                _writeClient.PutObject(_bucket, key, stream);
             }
             var expiration = DateTime.Now.AddYears(20);
-            var url = _readClient.GeneratePresignedUri(_bucket, fileName, expiration);
+            var url = _readClient.GeneratePresignedUri(_bucket, key, expiration);
             return url;
         }
         catch (Exception ex)
@@ -58,40 +61,20 @@ public class AliYunOssUtil
             throw;
         }
     }
-    
-    /// <summary>
-    /// IFormFile多文件上传
-    /// </summary>
-    /// <param name="files"></param>
-    /// <returns></returns>
-    public List<Uri> UploadFile(List<IFormFile> files)
-    { 
-        var ossFilesNameList = new List<Uri>();
+
+    public void DeleteFile(string path, string filename)
+    {
+        var key = Path.Combine(path, filename).Replace('\\', '/');
+        key = key.Substring(1, key.Length - 1);
         try
         {
-            var writeClient = new OssClient(_endpoint, _accessKeyId, _accessKeySecret);
-            var readClient = new OssClient(_endpoint, _accessKeyId, _accessKeySecret);
-           
-            for (var i = 0; i < files.Count; i++)
-            {
-                var file = files[i];
-                var fileName =  DateTime.Now.ToString("yyyyMMddHHmmssffffff") + i + Path.GetExtension(file.FileName);
-                using (var stream = file.OpenReadStream())
-                {
-                    writeClient.PutObject(_bucket, fileName, stream);
-                }
-                var expiration = DateTime.Now.AddYears(20);
-                var url = readClient.GeneratePresignedUri(_bucket, fileName, expiration);
-                ossFilesNameList.Add(url);
-            }
-            
+            _writeClient.DeleteObject(_bucket, key);
         }
         catch (Exception ex)
         {
-            throw;
+            // ignored
         }
 
-        return ossFilesNameList;
     }
 
 }

@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Services;
+using PaperHelper.ViewModels;
 
 namespace PaperHelper.Controllers;
 
@@ -41,6 +42,33 @@ public class UserController : BaseController
     public ActionResult GetUserById(int id)
     {
         var userDetail = UserId == id ? _userService.GetUserFullDetail(id) : _userService.GetUserPartDetail(id);
+        return Ok(userDetail);
+    }
+    
+    /// <summary>
+    /// 修改用户信息
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="updateViewModel">用户信息</param>
+    /// <returns>用户详情</returns>
+    [HttpPut("{id}", Name = "UpdateUser")]
+    public ActionResult UpdateUser(int id, UserUpdateViewModel updateViewModel)
+    {
+        var userDetail = _userService.UpdateUser(id, updateViewModel.Username, updateViewModel.OldPassword,
+            updateViewModel.NewPassword, updateViewModel.Phone, UserId);
+        return Ok(userDetail);
+    }
+    
+    /// <summary>
+    /// 上传用户头像
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="file">头像文件</param>
+    /// <returns></returns>
+    [HttpPost("{id}/avatars", Name = "UploadAvatar")]
+    public ActionResult UploadAvatar(int id, IFormFile file)
+    {
+        var userDetail = _userService.UpdateUserAvatar(id, file, UserId);
         return Ok(userDetail);
     }
     
