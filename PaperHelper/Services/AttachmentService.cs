@@ -22,9 +22,7 @@ public class AttachmentService
         _context = context;
         _attachmentSerializer = new AttachmentSerializer(_context);
         
-        var aliYunConfig = _configuration.GetSection("AliYun");
-        _ali = new AliYunOssUtil(aliYunConfig["AccessKeyId"], aliYunConfig["AccessKeySecret"], 
-            aliYunConfig["Endpoint"], aliYunConfig["Bucket"]);
+        _ali = new AliYunOssUtil(_configuration);
     }
     
     /// <summary>
