@@ -61,11 +61,9 @@ public class Paper
     /// </summary>
     public string? Doi { get; set; }
     
-    /// <summary>
-    /// 附件列表
-    /// </summary>
-    [JsonIgnore]
-    public List<Attachment>? Attachments { get; set; }
+    public int AttachmentId { get; set; }
+    public virtual Attachment? Attachment { get; set; }
+    
     /// <summary>
     /// 笔记列表
     /// </summary>

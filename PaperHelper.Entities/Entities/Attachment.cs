@@ -26,19 +26,7 @@ public class Attachment
     /// 文件链接
     /// </summary>
     public Uri? Url { get; set; }
-    
-    /// <summary>
-    /// 所属项目
-    /// </summary>
-    public int ProjectId { get; set; }
-    public virtual Project? Project { get; set; }
-    
-    /// <summary>
-    /// 所属论文
-    /// </summary>
-    public int PaperId { get; set; }
-    public virtual Paper? Paper { get; set; }
-    
+
     public DateTime CreateTime { get; set; }
     public DateTime? UpdateTime { get; set; }
 }

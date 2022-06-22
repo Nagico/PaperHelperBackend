@@ -27,25 +27,11 @@ public class AttachmentConfig : IEntityTypeConfiguration<Attachment>
 
         builder.Property(x => x.Url)
             .HasColumnName("url");
-        
-        builder.Property(x => x.ProjectId)
-            .HasColumnName("project_id");
-        
-        builder.Property(x => x.PaperId)
-            .HasColumnName("paper_id");
 
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time");
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");
-
-        builder.HasOne(x => x.Project)
-            .WithMany(x => x.Attachments)
-            .HasForeignKey(x => x.ProjectId);
-        
-        builder.HasOne(x => x.Paper)
-            .WithMany(x => x.Attachments)
-            .HasForeignKey(x => x.PaperId);
     }
 }

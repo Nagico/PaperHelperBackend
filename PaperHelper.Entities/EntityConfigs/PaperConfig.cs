@@ -60,6 +60,9 @@ public class PaperConfig : IEntityTypeConfiguration<Paper>
         builder.Property(x=>x.Doi)
             .HasColumnName("doi");
 
+        builder.Property(x => x.AttachmentId)
+            .HasColumnName("attachment_id");
+        
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time");
 

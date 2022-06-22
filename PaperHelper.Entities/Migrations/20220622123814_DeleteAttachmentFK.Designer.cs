@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaperHelper.Entities;
 
@@ -10,9 +11,10 @@ using PaperHelper.Entities;
 namespace PaperHelper.Entities.Migrations
 {
     [DbContext(typeof(PaperHelperContext))]
-    partial class PaperHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220622123814_DeleteAttachmentFK")]
+    partial class DeleteAttachmentFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
