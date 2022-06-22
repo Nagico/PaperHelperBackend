@@ -335,6 +335,11 @@ public class ProjectService
         // 检查权限
         CheckOwner(project, loginUserId);
         
+        if (IsOwner(project, userId))
+        {
+            throw new AppError("A0430", "用户已是项目所有者");
+        }
+        
         // 转移项目
         project.Members.First(x => x.UserId == userId).IsOwner = true;
         project.Members.First(x => x.UserId == loginUserId).IsOwner = false;
