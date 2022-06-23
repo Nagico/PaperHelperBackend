@@ -40,6 +40,13 @@ public class PaperSerializer : BaseSerializer
     {
         var paperDetail = JObject.FromObject(paper);
         
+        // 处理JSON信息
+        paperDetail["keyword"] = JArray.Parse(paperDetail["keywords"].ToString());
+        paperDetail["author"] = JArray.Parse(paperDetail["authors"].ToString());
+        paperDetail.Remove("keywords");
+        paperDetail.Remove("authors");
+        
+        
         // 添加引用信息
         var references = new JArray();
         foreach (var reference in paper.References)
