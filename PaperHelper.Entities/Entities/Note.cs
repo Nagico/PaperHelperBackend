@@ -1,4 +1,6 @@
-﻿namespace PaperHelper.Entities.Entities;
+﻿using Newtonsoft.Json;
+
+namespace PaperHelper.Entities.Entities;
 
 /// <summary>
 /// 笔记
@@ -8,7 +10,7 @@ public class Note
     public int Id { get; set; }
     
     /// <summary>
-    /// 笔记类型 0-文本 1-思维导图
+    /// 笔记类型 0-文本 1-思维导图 2-批注
     /// </summary>
     public int Type { get; set; }
     /// <summary>
@@ -19,17 +21,13 @@ public class Note
     /// 笔记内容
     /// </summary>
     public string? Content { get; set; }
-    
-    /// <summary>
-    /// 所属项目
-    /// </summary>
-    public int ProjectId { get; set; }
-    public virtual Project? Project { get; set; }
-    
+
     /// <summary>
     /// 所属论文
     /// </summary>
+    [JsonIgnore]
     public int PaperId { get; set; }
+    [JsonIgnore]
     public virtual Paper? Paper { get; set; }
     
     public DateTime CreateTime { get; set; }

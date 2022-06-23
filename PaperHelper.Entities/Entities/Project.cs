@@ -32,12 +32,6 @@ public class Project
     /// </summary>
     [JsonIgnore]
     public List<UserProject>? Members { get; set; }
-    
-    /// <summary>
-    /// 项目笔记列表
-    /// </summary>
-    [JsonIgnore]
-    public List<Note>? Notes { get; set; }
 
     public DateTime CreateTime { get; set; }
     public DateTime? UpdateTime { get; set; }

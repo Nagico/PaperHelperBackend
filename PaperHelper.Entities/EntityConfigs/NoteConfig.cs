@@ -19,16 +19,12 @@ public class NoteConfig : IEntityTypeConfiguration<Note>
             .HasColumnName("type");
 
         builder.Property(x => x.Title)
-            .HasColumnName("title")
-            .IsRequired();
+            .HasColumnName("title");
 
         builder.Property(x => x.Content)
             .HasColumnName("content")
             .IsRequired();
-        
-        builder.Property(x => x.ProjectId)
-            .HasColumnName("project_id");
-        
+
         builder.Property(x => x.PaperId)
             .HasColumnName("paper_id");
 
@@ -37,11 +33,7 @@ public class NoteConfig : IEntityTypeConfiguration<Note>
 
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time");
-        
-        builder.HasOne(x => x.Project)
-            .WithMany(x => x.Notes)
-            .HasForeignKey(x => x.ProjectId);
-        
+
         builder.HasOne(x => x.Paper)
             .WithMany(x => x.Notes)
             .HasForeignKey(x => x.PaperId);

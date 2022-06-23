@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaperHelper.Entities;
 
@@ -10,9 +11,10 @@ using PaperHelper.Entities;
 namespace PaperHelper.Entities.Migrations
 {
     [DbContext(typeof(PaperHelperContext))]
-    partial class PaperHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220623074502_DeleteNoteTitleRequirement")]
+    partial class DeleteNoteTitleRequirement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +78,9 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnType("int")
                         .HasColumnName("paper_id");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("longtext")
                         .HasColumnName("title");
@@ -91,6 +96,8 @@ namespace PaperHelper.Entities.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PaperId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("tb_note", (string)null);
                 });
@@ -374,6 +381,10 @@ namespace PaperHelper.Entities.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PaperHelper.Entities.Entities.Project", null)
+                        .WithMany("Notes")
+                        .HasForeignKey("ProjectId");
+
                     b.Navigation("Paper");
                 });
 
@@ -467,6 +478,8 @@ namespace PaperHelper.Entities.Migrations
             modelBuilder.Entity("PaperHelper.Entities.Entities.Project", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Notes");
 
                     b.Navigation("Papers");
                 });

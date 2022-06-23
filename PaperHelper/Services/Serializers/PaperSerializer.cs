@@ -10,7 +10,7 @@ namespace PaperHelper.Services.Serializers;
 /// </summary>
 public class PaperSerializer : BaseSerializer
 {
-    public PaperSerializer(PaperHelperContext context) : base(context) {}
+    public PaperSerializer(PaperHelperContext context) : base(context) { }
     
     /// <summary>
     /// 获取论文简要信息
@@ -96,12 +96,6 @@ public class PaperSerializer : BaseSerializer
 
         paperDetail["tag"] = tags;
         paperDetail.Remove("tags");
-
-        // TODO: 添加笔记
-        var notes = new JArray();
-
-        paperDetail["note"] = notes;
-        paperDetail.Remove("notes");
 
         return paperDetail;
     }
