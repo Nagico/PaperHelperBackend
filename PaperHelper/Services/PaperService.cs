@@ -17,7 +17,7 @@ public class PaperService
     private readonly PaperHelperContext _context;
     private readonly PaperSerializer _paperSerializer;
     private readonly TagService _tagService;
-    
+
     public PaperService(IConfiguration configuration, PaperHelperContext context)
     {
         _configuration = configuration;
@@ -74,10 +74,12 @@ public class PaperService
     /// 获取论文详情
     /// </summary>
     /// <param name="paperId">论文ID</param>
+    /// <param name="loginUserId">当前登录用户</param>
     /// <returns>论文详情</returns>
-    public JObject GetPaperDetail(int paperId)
+    public JObject GetPaperDetail(int paperId, int loginUserId)
     {
         var paper = GetPaper(paperId);
+        
         return _paperSerializer.PaperDetail(paper);
     }
     
@@ -172,7 +174,7 @@ public class PaperService
 
         paper.UpdateTime = DateTime.Now;
         _context.SaveChanges();
-        
+
         return _paperSerializer.PaperDetail(paper);
     }
     
@@ -198,7 +200,7 @@ public class PaperService
         // 创建tag
         var tag = _tagService.GetCreateTag(tagName);
         
-        if (paper.Tags.Any(t => t.Id == tag.Id))
+        if (paper.Tags.Any(t => t.TagId == tag.Id))
         {
             throw new AppError("A0430", "标签已存在");
         }
