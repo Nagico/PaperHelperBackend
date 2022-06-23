@@ -45,6 +45,7 @@ public class AttachmentService
             Name = fileName,
             Ext = extName,
             Url = url,
+            Md5 = "",
             CreateTime = DateTime.Now,
             UpdateTime = DateTime.Now
         };
