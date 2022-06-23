@@ -22,7 +22,7 @@ public class PaperSerializer : BaseSerializer
         {
             ["id"] = paper.Id,
             ["title"] = paper.Title,
-            ["author"] = paper.Authors,
+            ["author"] = JArray.Parse(paper.Authors),
             ["year"] = paper.Year,
             ["publication"] = paper.Publication,
             ["create_time"] = paper.CreateTime,
