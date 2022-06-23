@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PaperHelper.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Extensions;
+using PaperHelper.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -137,7 +139,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint($"/swagger/v1/swagger.json?{CodeUtil.GenRandomCode(6)}", "My API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseCors("cors");

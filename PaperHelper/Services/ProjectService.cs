@@ -152,7 +152,7 @@ public class ProjectService
             Members = new List<UserProject>(),
             UpdateTime = DateTime.Now,
             CreateTime = DateTime.Now,
-            InvitationCode = CodeUtil.GenInvitationCode(8)
+            InvitationCode = CodeUtil.GenRandomCode(8)
         };
         
         // 添加所有者

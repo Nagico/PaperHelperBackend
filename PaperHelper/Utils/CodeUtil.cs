@@ -44,7 +44,7 @@ public static class CodeUtil
     /// </summary>
     /// <param name="length">字符串的长度</param>
     /// <returns></returns>
-    public static string GenInvitationCode(int length)
+    public static string GenRandomCode(int length)
     {
         var sb = new StringBuilder();
         for (var i = 0; i < length; i++)
