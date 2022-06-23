@@ -1,4 +1,6 @@
-﻿namespace PaperHelper.Entities.Entities;
+﻿using Newtonsoft.Json;
+
+namespace PaperHelper.Entities.Entities;
 
 /// <summary>
 /// 附件
@@ -26,6 +28,12 @@ public class Attachment
     /// 文件链接
     /// </summary>
     public Uri? Url { get; set; }
+    
+    /// <summary>
+    /// MD5摘要
+    /// </summary>
+    [JsonIgnore]
+    public string Md5 { get; set; }
 
     public DateTime CreateTime { get; set; }
     public DateTime? UpdateTime { get; set; }

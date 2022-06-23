@@ -30,4 +30,12 @@ public static class EncryptionUtil
     {
         return Md5(Md5(text) + salt);
     }
+
+    public static string Md5File(IFormFile file)
+    {
+        using var md5 = MD5.Create();
+        using var stream = file.OpenReadStream();
+        var strResult = BitConverter.ToString(md5.ComputeHash(stream));
+        return strResult.Replace("-", "");
+    }
 }

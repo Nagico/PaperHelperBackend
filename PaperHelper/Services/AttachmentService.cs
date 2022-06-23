@@ -35,6 +35,7 @@ public class AttachmentService
     /// <returns>附件对象</returns>
     public Attachment CreateAttachment(int projectId, string fileName, string extName, IFormFile formFile)
     {
+        var md5 = EncryptionUtil.Md5File(formFile);
         // 上传附件
         var url = _ali.UploadFile($"project/{projectId}", formFile);
 
