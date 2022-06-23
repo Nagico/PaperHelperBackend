@@ -123,6 +123,14 @@ public class ProjectController : BaseController
         return Ok(res);
     }
     
+    /// <summary>
+    /// 上传附件并自动创建论文
+    /// </summary>
+    /// <param name="projectId">所属项目ID</param>
+    /// <param name="filename">文件名</param>
+    /// <param name="extname">扩展名</param>
+    /// <param name="file">文件</param>
+    /// <returns></returns>
     [HttpPost("{projectId:int}/attachments", Name = "CreatePaperByAttachment")]
     public IActionResult CreatePaperByAttachment(int projectId, string filename, string extname, IFormFile file)
     {

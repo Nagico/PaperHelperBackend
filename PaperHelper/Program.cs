@@ -116,6 +116,21 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(requirement);
 });
 
+// 获取xml文件
+var basePath = AppContext.BaseDirectory;
+var d = new DirectoryInfo(basePath);
+var files = d.GetFiles("*.xml");
+var xmlCommentsFilePath = files.Select(a => Path.Combine(basePath, a.FullName)).ToList();
+    
+// swagger xml配置
+builder.Services.AddSwaggerGen(c =>
+{
+    foreach (var item in xmlCommentsFilePath)
+    {
+        c.IncludeXmlComments(item);
+    }
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
