@@ -134,7 +134,7 @@ public class ProjectController : BaseController
     [HttpPost("{projectId:int}/attachments", Name = "CreatePaperByAttachment")]
     public IActionResult CreatePaperByAttachment(int projectId, string filename, string extname, IFormFile file)
     {
-        var paper = _paperService.CreatePaperWithAttachment(projectId, filename, extname, file);
+        var paper = _paperService.CreatePaperWithAttachment(projectId, filename, extname, file, UserId);
         return Created($"/papers/{paper["id"]}", paper);
     }
 
