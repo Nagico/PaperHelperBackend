@@ -11,7 +11,7 @@ namespace PaperHelper.Controllers;
 [ApiController]
 [Route("papers")]
 [Authorize]
-public class PaperController
+public class PaperController : BaseController
 {
     private readonly PaperService _paperService;
     
@@ -19,6 +19,18 @@ public class PaperController
     {
         _paperService = new PaperService(configuration, paperHelperContext);
     }
-
+    
+    /// <summary>
+    /// 获取论文详情
+    /// </summary>
+    /// <param name="id">论文ID</param>
+    /// <returns>详细信息</returns>
+    [HttpGet("{id}", Name = "GetPaperDetail")]
+    public ActionResult GetPaperDetail(int id)
+    {
+        var paper = _paperService.GetPaperDetail(id);
+        return Ok(paper);
+    }
+    
 
 }

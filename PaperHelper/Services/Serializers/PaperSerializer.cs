@@ -46,6 +46,10 @@ public class PaperSerializer : BaseSerializer
         paperDetail.Remove("keywords");
         paperDetail.Remove("authors");
         
+        // 移除无用信息
+        paperDetail.Remove("attachment_id");
+        paperDetail.Remove("project");
+        
         
         // 添加引用信息
         var references = new JArray();
@@ -58,7 +62,8 @@ public class PaperSerializer : BaseSerializer
             }
         }
 
-        paperDetail["references"] = references;
+        paperDetail["reference"] = references;
+        paperDetail.Remove("references");
         
         // 添加被引用信息
         var referenceFrom = new JArray();
@@ -77,11 +82,13 @@ public class PaperSerializer : BaseSerializer
         var tags = new JArray();
 
         paperDetail["tag"] = tags;
+        paperDetail.Remove("tags");
 
         // TODO: 添加笔记
         var notes = new JArray();
 
         paperDetail["note"] = notes;
+        paperDetail.Remove("notes");
 
         return paperDetail;
     }
