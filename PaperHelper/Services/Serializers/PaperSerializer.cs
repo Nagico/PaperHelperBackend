@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 
@@ -18,10 +19,18 @@ public class PaperSerializer : BaseSerializer
     /// <returns>JSON对象</returns>
     public JObject PaperInfo(Paper paper)
     {
+        // 获取Tag信息
+        var tags = new JArray();
+        foreach (var tagInfo in paper.Tags.Select(tag => _context.Tags.Find(tag.TagId)).Where(tagInfo => tagInfo != null))
+        {
+            tags.Add(JObject.FromObject(tagInfo));
+        }
+        
         var paperInfo = new JObject
         {
             ["id"] = paper.Id,
             ["title"] = paper.Title,
+            ["tag"] = tags,
             ["author"] = JArray.Parse(paper.Authors),
             ["year"] = paper.Year,
             ["publication"] = paper.Publication,
@@ -55,7 +64,7 @@ public class PaperSerializer : BaseSerializer
         var references = new JArray();
         foreach (var reference in paper.References)
         {
-            var refPaper = _context.Papers.Find(reference.PaperId);
+            var refPaper = _context.Papers.Include("Tags").FirstOrDefault(x => x.Id == reference.PaperId);
             if (refPaper != null)
             {
                 references.Add(PaperInfo(refPaper));
@@ -69,7 +78,7 @@ public class PaperSerializer : BaseSerializer
         var referenceFrom = new JArray();
         foreach (var reference in paper.ReferenceFrom)
         {
-            var refPaper = _context.Papers.Find(reference.RefPaperId);
+            var refPaper = _context.Papers.Include("Tags").FirstOrDefault(x => x.Id == reference.RefPaperId);
             if (refPaper != null)
             {
                 references.Add(PaperInfo(refPaper));
@@ -78,8 +87,12 @@ public class PaperSerializer : BaseSerializer
 
         paperDetail["reference_from"] = referenceFrom;
         
-        // TODO: 添加标签
+        // 添加标签
         var tags = new JArray();
+        foreach (var tagInfo in paper.Tags.Select(tag => _context.Tags.Find(tag.TagId)).Where(tagInfo => tagInfo != null))
+        {
+            tags.Add(JObject.FromObject(tagInfo));
+        }
 
         paperDetail["tag"] = tags;
         paperDetail.Remove("tags");

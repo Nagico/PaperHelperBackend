@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 
@@ -76,7 +77,9 @@ public class ProjectSerializer : BaseSerializer
         // 项目论文
         var papers = new JArray();
         var paperSerializer = new PaperSerializer(_context);
-        foreach (var paper in project.Papers)
+        
+        var projectPapers = _context.Papers.Include("Tags").Where(p => p.ProjectId == project.Id).ToList();
+        foreach (var paper in projectPapers)
         {
             papers.Add(paperSerializer.PaperInfo(paper));
         }
