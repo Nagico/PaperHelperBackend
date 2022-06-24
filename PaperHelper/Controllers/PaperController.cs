@@ -51,6 +51,18 @@ public class PaperController : BaseController
     }
     
     /// <summary>
+    /// 删除论文
+    /// </summary>
+    /// <param name="id">论文ID</param>
+    /// <returns>空</returns>
+    [HttpDelete("{id}", Name = "DeletePaper")]
+    public ActionResult DeletePaper(int id)
+    {
+        _paperService.DeletePaper(id, UserId);
+        return NoContent();
+    }
+    
+    /// <summary>
     /// 添加论文标签
     /// </summary>
     /// <param name="id">论文ID</param>

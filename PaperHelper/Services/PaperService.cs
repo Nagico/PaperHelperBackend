@@ -179,6 +179,24 @@ public class PaperService
     }
     
     /// <summary>
+    /// 删除论文
+    /// </summary>
+    /// <param name="paperId">论文ID</param>
+    /// <param name="loginUserId">当前登录用户ID</param>
+    /// <exception cref="AppError">删除失败</exception>
+    public void DeletePaper(int paperId, int loginUserId)
+    {
+        var paper = _context.Papers.FirstOrDefault(p => p.Id == paperId);
+        if (paper == null)
+        {
+            throw new AppError("A0313");
+        }
+        CheckProjectMember(paper.ProjectId, loginUserId);
+        _context.Papers.Remove(paper);
+        _context.SaveChanges();
+    }
+    
+    /// <summary>
     /// 新增论文标签
     /// </summary>
     /// <param name="paperId">论文ID</param>
@@ -192,7 +210,7 @@ public class PaperService
         
         if (paper == null)
         {
-            throw new AppError("A0514");
+            throw new AppError("A0510");
         }
         
         CheckProjectMember(paper.ProjectId, loginUserId);
