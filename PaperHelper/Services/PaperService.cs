@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
@@ -117,7 +116,7 @@ public class PaperService
         
         return _paperSerializer.PaperDetail(paper);
     }
-    
+
     /// <summary>
     /// 通过url添加论文
     /// </summary>

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using PaperHelper.Entities.Entities;
@@ -152,6 +153,13 @@ public class PaperSpider
         return (basicInfo[2], paperUrl);
     }
     
+    private static string? GetBibField(string bib, string fieldName)
+    {
+        var regex = fieldName + "={(.+?)}";
+        var m = Regex.Match(bib, regex, RegexOptions.IgnoreCase);
+        return m.Success ? m.Groups[1].Value : null;
+    }
+    
     /// <summary>
     /// 获取论文
     /// </summary>
@@ -174,36 +182,34 @@ public class PaperSpider
             }
         };
         
-        // info from doi
-        var bib = BibtexLibrary.BibtexImporter.FromString(doiInfo);
-        var bibTags = bib.Entries.First().Tags;
+        var authors = (GetBibField(doiInfo, "author") ?? "").Replace(",", "").Split(" and ");
         
-        var authors = bibTags.GetValueOrDefault("author", "").Split(", ");
-        
-        paperInfo.Paper.Title = bibTags["title"];
+        paperInfo.Paper.Title = GetBibField(doiInfo, "title");
         paperInfo.Paper.Authors = JArray.FromObject(authors).ToString();
 
-        var urlStr = bibTags.GetValueOrDefault("url", "");
-        if (urlStr != "")
+        var urlStr = GetBibField(doiInfo, "url");
+        if (urlStr != null)
         {
             paperInfo.Paper.Url = new Uri(urlStr);
         }
 
-        paperInfo.Paper.Publication = bibTags.GetValueOrDefault("journal", null);
+        paperInfo.Paper.Publication = GetBibField(doiInfo, "journal");
         
-        var yearStr = bibTags.GetValueOrDefault("year", "");
-        if (yearStr != "")
+        var yearStr = GetBibField(doiInfo, "year");
+        if (yearStr != null)
         {
             paperInfo.Paper.Year = int.Parse(yearStr);
         }
         
-        var monthStr = bibTags.GetValueOrDefault("month", "");
-        if (monthStr != "")
+        var monthStr = GetBibField(doiInfo, "month");
+        if (monthStr != null)
         {
-            paperInfo.Paper.Month = DateTime.ParseExact(bibTags["month"], "MMM", CultureInfo.InvariantCulture).Month;
+            paperInfo.Paper.Month = DateTime.ParseExact(monthStr, "MMM", CultureInfo.InvariantCulture).Month;
         }
         
-        paperInfo.Paper.Volume = bibTags.GetValueOrDefault("volume", null);
+        paperInfo.Paper.Volume = GetBibField(doiInfo, "volume");
+        
+        paperInfo.Paper.Pages = GetBibField(doiInfo, "pages");
         
         // abstract
         var abstractJsonObj = JObject.Parse(abstractJson);
