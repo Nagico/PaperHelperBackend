@@ -1,0 +1,25 @@
+{
+  "name": "paper_helper_sharedb_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/LSX-s-Software/paper_helper_sharedb_server.git"
+  },
+  "author": "LSX-s-Software",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LSX-s-Software/paper_helper_sharedb_server/issues"
+  },
+  "homepage": "https://github.com/LSX-s-Software/paper_helper_sharedb_server#readme",
+  "dependencies": {
+    "ot-json1": "^1.0.2",
+    "sharedb": "^3.0.0",
+    "websocket-push-stream": "^0.1.1",
+    "ws": "^8.8.0"
+  }
+}
