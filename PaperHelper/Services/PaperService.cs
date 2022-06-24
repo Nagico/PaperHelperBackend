@@ -5,6 +5,7 @@ using PaperHelper.Entities;
 using PaperHelper.Entities.Entities;
 using PaperHelper.Exceptions;
 using PaperHelper.Services.Serializers;
+using PaperHelper.Utils;
 
 namespace PaperHelper.Services;
 
@@ -17,6 +18,8 @@ public class PaperService
     private readonly PaperHelperContext _context;
     private readonly PaperSerializer _paperSerializer;
     private readonly TagService _tagService;
+    private readonly AttachmentService _attachmentService;
+    private readonly PaperSpider _spider;
 
     public PaperService(IConfiguration configuration, PaperHelperContext context)
     {
@@ -24,6 +27,8 @@ public class PaperService
         _context = context;
         _paperSerializer = new PaperSerializer(_context);
         _tagService = new TagService(_configuration, _context);
+        _attachmentService = new AttachmentService(_configuration, _context);
+        _spider = new PaperSpider(_configuration);
     }
     
     /// <summary>
@@ -95,8 +100,7 @@ public class PaperService
     {
         CheckProjectMember(projectId, loginUserId);
         
-        var attachmentService = new AttachmentService(_configuration, _context);
-        var attachment = attachmentService.CreateAttachment(projectId, fileName, extName, formFile);
+        var attachment = _attachmentService.CreateAttachment(projectId, fileName, extName, formFile);
         
         var paper = new Paper
         {
@@ -112,6 +116,42 @@ public class PaperService
         paper = GetPaper(paper.Id);
         
         return _paperSerializer.PaperDetail(paper);
+    }
+    
+    /// <summary>
+    /// 通过url添加论文
+    /// </summary>
+    /// <param name="projectId">项目ID</param>
+    /// <param name="url">url</param>
+    /// <param name="loginUserId">登录用户ID</param>
+    /// <returns></returns>
+    public async Task<JObject> CreatePaperWithUrl(int projectId, string url, int loginUserId)
+    {
+        CheckProjectMember(projectId, loginUserId);
+
+        var data = await _spider.GetDoi(url);
+        if (data.Item1 == null || data.Item2 == null)
+        {
+            throw new AppError("A0514", "获取论文信息失败");
+        }
+
+        var info = await _spider.GetPaper(data.Item1, data.Item2);
+
+        var attachment = _attachmentService.CreateAttachment(projectId,
+            info.File.Name,
+            Path.GetExtension(info.File.FileName),
+            info.File,
+            data.Item1);
+        
+        info.Paper.ProjectId = projectId;
+        info.Paper.AttachmentId = attachment.Id;
+        info.Paper.CreateTime = DateTime.Now;
+        info.Paper.UpdateTime = DateTime.Now;
+        info.Paper.Tags = new List<PaperTag>();
+        _context.Papers.Add(info.Paper);
+        await _context.SaveChangesAsync();
+
+        return _paperSerializer.PaperInfo(info.Paper);
     }
     
     /// <summary>

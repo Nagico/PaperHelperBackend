@@ -30,6 +30,9 @@ public class AttachmentConfig : IEntityTypeConfiguration<Attachment>
         
         builder.Property(x => x.Md5)
             .HasColumnName("md5");
+        
+        builder.Property(x => x.Doi)
+            .HasColumnName("doi");
 
         builder.Property(x => x.CreateTime)
             .HasColumnName("create_time");

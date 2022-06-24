@@ -131,11 +131,24 @@ public class ProjectController : BaseController
     /// <param name="extname">扩展名</param>
     /// <param name="file">文件</param>
     /// <returns></returns>
-    [HttpPost("{projectId:int}/attachments", Name = "CreatePaperByAttachment")]
+    [HttpPost("{projectId:int}/attachments/file/", Name = "CreatePaperByAttachment")]
     public IActionResult CreatePaperByAttachment(int projectId, string filename, string extname, IFormFile file)
     {
         var paper = _paperService.CreatePaperWithAttachment(projectId, filename, extname, file, UserId);
         return Created($"/papers/{paper["id"]}", paper);
+    }
+    
+    /// <summary>
+    /// 识别url或doi自动添加论文
+    /// </summary>
+    /// <param name="projectId">项目ID</param>
+    /// <param name="url">提交链接</param>
+    /// <returns>论文信息</returns>
+    [HttpPost("{projectId:int}/attachments/url/", Name = "CreatePaperByUrl")]
+    public async Task<IActionResult> CreatePaperByUrl(int projectId, string url)
+    {
+        var paperInfo = await _paperService.CreatePaperWithUrl(projectId, url, UserId);
+        return Created($"/projects/{projectId}", paperInfo);
     }
 
 }

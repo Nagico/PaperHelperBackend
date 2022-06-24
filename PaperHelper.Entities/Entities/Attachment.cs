@@ -33,7 +33,12 @@ public class Attachment
     /// MD5摘要
     /// </summary>
     [JsonIgnore]
-    public string Md5 { get; set; }
+    public string? Md5 { get; set; }
+    
+    /// <summary>
+    /// DOI
+    /// </summary>
+    public string? Doi { get; set; }
 
     public DateTime CreateTime { get; set; }
     public DateTime? UpdateTime { get; set; }

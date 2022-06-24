@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaperHelper.Entities;
 
@@ -10,9 +11,10 @@ using PaperHelper.Entities;
 namespace PaperHelper.Entities.Migrations
 {
     [DbContext(typeof(PaperHelperContext))]
-    partial class PaperHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220624085235_AddAttachmentDoi")]
+    partial class AddAttachmentDoi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +33,7 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnName("create_time");
 
                     b.Property<string>("Doi")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("doi");
 
@@ -39,6 +42,7 @@ namespace PaperHelper.Entities.Migrations
                         .HasColumnName("ext");
 
                     b.Property<string>("Md5")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("md5");
 

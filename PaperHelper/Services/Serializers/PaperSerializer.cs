@@ -58,34 +58,8 @@ public class PaperSerializer : BaseSerializer
         // 移除无用信息
         paperDetail.Remove("attachment_id");
         paperDetail.Remove("project");
-        
-        
-        // 添加引用信息
-        var references = new JArray();
-        foreach (var reference in paper.References)
-        {
-            var refPaper = _context.Papers.Include("Tags").FirstOrDefault(x => x.Id == reference.PaperId);
-            if (refPaper != null)
-            {
-                references.Add(PaperInfo(refPaper));
-            }
-        }
-
-        paperDetail["reference"] = references;
         paperDetail.Remove("references");
         
-        // 添加被引用信息
-        var referenceFrom = new JArray();
-        foreach (var reference in paper.ReferenceFrom)
-        {
-            var refPaper = _context.Papers.Include("Tags").FirstOrDefault(x => x.Id == reference.RefPaperId);
-            if (refPaper != null)
-            {
-                references.Add(PaperInfo(refPaper));
-            }
-        }
-
-        paperDetail["reference_from"] = referenceFrom;
         
         // 添加标签
         var tags = new JArray();
