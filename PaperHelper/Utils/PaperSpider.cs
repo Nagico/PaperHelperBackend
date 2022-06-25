@@ -102,17 +102,17 @@ public class PaperSpider
     private async Task<IFormFile> FetchFile(Uri url)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        request.Headers.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7");
-        request.Headers.Add("Cache-Control", "no-cache");
-        request.Headers.Add("Connection", "keep-alive");
-        request.Headers.Add("Host", "sci-hub.wf");
-        request.Headers.Add("Pragma", "no-cache");
-        request.Headers.Add("Sec-Fetch-Dest", "document");
-        request.Headers.Add("Sec-Fetch-Mode", "navigate");
-        request.Headers.Add("Sec-Fetch-Site", "cross-site");
-        request.Headers.Add("Sec-Fetch-User", "?1");
-        request.Headers.Add("Upgrade-Insecure-Requests", "1");
+        // request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        // request.Headers.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7");
+        // request.Headers.Add("Cache-Control", "no-cache");
+        // request.Headers.Add("Connection", "keep-alive");
+        // request.Headers.Add("Host", "sci-hub.wf");
+        // request.Headers.Add("Pragma", "no-cache");
+        // request.Headers.Add("Sec-Fetch-Dest", "document");
+        // request.Headers.Add("Sec-Fetch-Mode", "navigate");
+        // request.Headers.Add("Sec-Fetch-Site", "cross-site");
+        // request.Headers.Add("Sec-Fetch-User", "?1");
+        // request.Headers.Add("Upgrade-Insecure-Requests", "1");
         request.Headers.Add("user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");
     
         var response = await _client.SendAsync(request);
