@@ -88,6 +88,7 @@ public class AuthenticateService
             Username = username,
             Password = EncryptionUtil.Encrypt(password, _salt), // 密码加密
             Phone = phone,
+            Avatar = new Uri("https://paperhelper.oss-cn-shanghai.aliyuncs.com/avatar/default.jpg"), // 默认头像
             CreateTime = DateTime.Now,
             LastLogin = DateTime.Now
         };
