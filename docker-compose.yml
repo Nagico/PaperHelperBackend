@@ -3,7 +3,7 @@ services:
   ### ShareDB container ########################################
   sharedb:
     image: registry.cn-hangzhou.aliyuncs.com/nagico/paper-helper-backend:sharedb
-    container_name: paper-helper-backend-redis
+    container_name: paper-helper-backend-sharedb
     ports:
       - "${WS_PORT}:9090"
     env_file: .env # ENV file
