@@ -99,7 +99,7 @@ public class PaperService
     {
         CheckProjectMember(projectId, loginUserId);
         
-        var attachment = _attachmentService.CreateAttachment(projectId, fileName, extName, formFile);
+        var attachment = _attachmentService.CreateAttachment(fileName, extName, formFile);
         
         var paper = new Paper
         {
@@ -136,8 +136,7 @@ public class PaperService
 
         var info = await _spider.GetPaper(data.Item1, data.Item2);
 
-        var attachment = _attachmentService.CreateAttachment(projectId,
-            info.File.Name,
+        var attachment = _attachmentService.CreateAttachment(info.File.Name,
             Path.GetExtension(info.File.FileName),
             info.File,
             data.Item1);

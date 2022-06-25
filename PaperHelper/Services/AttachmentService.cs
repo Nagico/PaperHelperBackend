@@ -33,21 +33,30 @@ public class AttachmentService
     /// <param name="extName">扩展名</param>
     /// <param name="formFile">文件</param>
     /// <returns>附件对象</returns>
-    public Attachment CreateAttachment(int projectId, string fileName, string extName, IFormFile formFile,
+    public Attachment CreateAttachment(string fileName, string extName, IFormFile formFile,
         string? doi = null)
 
     {
+
         var md5 = EncryptionUtil.Md5File(formFile);
+
+        var attachment = _context.Attachments.Where(a => a.Md5 == md5).FirstOrDefault();
+
+        if (attachment != null)
+        {
+            return attachment;
+        }
+
         // 上传附件
-        var url = _ali.UploadFile($"project/{projectId}", formFile);
+        var url = _ali.UploadFile($"attachments", formFile);
 
         // 新增附件信息
-        var attachment = new Attachment
+        attachment = new Attachment
         {
             Name = fileName,
             Ext = extName,
             Url = url,
-            Md5 = "",
+            Md5 = md5,
             Doi = doi,
             CreateTime = DateTime.Now,
             UpdateTime = DateTime.Now
