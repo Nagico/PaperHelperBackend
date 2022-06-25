@@ -18,6 +18,11 @@ var connectionString = builder.Configuration.GetConnectionString("PaperHelperDat
 builder.Services.AddDbContext<PaperHelperContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("PaperHelperCache");
+});
+
 //跨域设置
 builder.Services.AddCors(option =>
     option.AddPolicy("cors", policy =>
