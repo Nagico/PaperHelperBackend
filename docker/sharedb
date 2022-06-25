@@ -2,7 +2,7 @@
 
 WORKDIR /usr/src/app
 
-COPY ./ ./
+COPY ./sharedb_server/ ./
 RUN npm install
 
 EXPOSE 9090
