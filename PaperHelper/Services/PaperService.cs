@@ -131,25 +131,35 @@ public class PaperService
         var data = await _spider.GetDoi(url);
         if (data.Item1 == null || data.Item2 == null)
         {
-            throw new AppError("A0514", "获取论文信息失败");
+            throw new AppError("A0514", "暂时无法自动下载该论文，请下载后手动上传");
         }
 
         var info = await _spider.GetPaper(data.Item1, data.Item2);
 
-        var attachment = _attachmentService.CreateAttachment(info.File.Name,
-            Path.GetExtension(info.File.FileName),
-            info.File,
-            data.Item1);
+        var attachment = _context.Attachments.Where(a => a.Doi == data.Item1).FirstOrDefault();
+
+        if (attachment == null)
+        {
+            var file = await _spider.GetPaperFile(data.Item2);
+            if (file.Length < 10240)
+            {
+                throw new AppError("A0514", "暂时无法自动下载该论文，请下载后手动上传");
+            }
+            attachment = _attachmentService.CreateAttachment(file.Name,
+                Path.GetExtension(file.FileName),
+                file,
+                data.Item1);
+        }
         
-        info.Paper.ProjectId = projectId;
-        info.Paper.AttachmentId = attachment.Id;
-        info.Paper.CreateTime = DateTime.Now;
-        info.Paper.UpdateTime = DateTime.Now;
-        info.Paper.Tags = new List<PaperTag>();
-        _context.Papers.Add(info.Paper);
+        info.ProjectId = projectId;
+        info.AttachmentId = attachment.Id;
+        info.CreateTime = DateTime.Now;
+        info.UpdateTime = DateTime.Now;
+        info.Tags = new List<PaperTag>();
+        _context.Papers.Add(info);
         await _context.SaveChangesAsync();
 
-        return _paperSerializer.PaperInfo(info.Paper);
+        return _paperSerializer.PaperInfo(info);
     }
     
     /// <summary>

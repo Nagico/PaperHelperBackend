@@ -9,15 +9,6 @@ using PaperHelper.Entities.Entities;
 namespace PaperHelper.Utils;
 
 /// <summary>
-/// Paper抓取信息
-/// </summary>
-public class PaperInfo
-{
-    public IFormFile File { get; set; }
-    public Paper Paper { get; set; }
-}
-
-/// <summary>
 /// 论文抓取类
 /// </summary>
 public class PaperSpider
@@ -141,6 +132,11 @@ public class PaperSpider
         var sciHubDoc = new HtmlDocument();
         sciHubDoc.LoadHtml(sciHubHtml);
 
+        if (sciHubHtml.IndexOf("Sorry, sci-hub has not included this article yet") != -1)
+        {
+            return (null, null);
+        }
+
         var fileNode = sciHubDoc.DocumentNode.SelectSingleNode("//*[@id='pdf']");
         
         if (fileNode == null)
@@ -166,50 +162,44 @@ public class PaperSpider
     /// <param name="doi">doi</param>
     /// <param name="url">文件url</param>
     /// <returns>论文信息及文件</returns>
-    public async Task<PaperInfo?> GetPaper(string doi, string url)
+    public async Task<Paper?> GetPaper(string doi, string url)
     {
-        var paperUrl = new Uri(url);
-        var file = await FetchFile(paperUrl);
         var doiInfo = await FetchDoiInfo(doi);
         var abstractJson = await FetchAbstract(doi);
-        
-        
-        var paperInfo = new PaperInfo
+
+        var paperInfo = new Paper
         {
-            Paper = new Paper
-            {
-                Doi = doi
-            }
+            Doi = doi
         };
         
         var authors = (GetBibField(doiInfo, "author") ?? "").Replace(",", "").Split(" and ");
         
-        paperInfo.Paper.Title = GetBibField(doiInfo, "title");
-        paperInfo.Paper.Authors = JArray.FromObject(authors).ToString();
+        paperInfo.Title = GetBibField(doiInfo, "title");
+        paperInfo.Authors = JArray.FromObject(authors).ToString();
 
         var urlStr = GetBibField(doiInfo, "url");
         if (urlStr != null)
         {
-            paperInfo.Paper.Url = new Uri(urlStr);
+            paperInfo.Url = new Uri(urlStr);
         }
 
-        paperInfo.Paper.Publication = GetBibField(doiInfo, "journal");
+        paperInfo.Publication = GetBibField(doiInfo, "journal");
         
         var yearStr = GetBibField(doiInfo, "year");
         if (yearStr != null)
         {
-            paperInfo.Paper.Year = int.Parse(yearStr);
+            paperInfo.Year = int.Parse(yearStr);
         }
         
         var monthStr = GetBibField(doiInfo, "month");
         if (monthStr != null)
         {
-            paperInfo.Paper.Month = DateTime.ParseExact(monthStr, "MMM", CultureInfo.InvariantCulture).Month;
+            paperInfo.Month = DateTime.ParseExact(monthStr, "MMM", CultureInfo.InvariantCulture).Month;
         }
         
-        paperInfo.Paper.Volume = GetBibField(doiInfo, "volume");
+        paperInfo.Volume = GetBibField(doiInfo, "volume");
         
-        paperInfo.Paper.Pages = GetBibField(doiInfo, "pages");
+        paperInfo.Pages = GetBibField(doiInfo, "pages");
         
         // abstract
         var abstractJsonObj = JObject.Parse(abstractJson);
@@ -217,18 +207,26 @@ public class PaperSpider
         var abstractNode = abstractJsonObj.GetValue("abstract");
         if (abstractNode != null)
         {
-            paperInfo.Paper.Abstract = abstractNode.ToString();
+            paperInfo.Abstract = abstractNode.ToString();
         }
         
         var keywordsNode = abstractJsonObj.GetValue("keywords");
         if (keywordsNode != null)
         {
-            paperInfo.Paper.Keywords = keywordsNode.ToString();
+            paperInfo.Keywords = keywordsNode.ToString();
         }
-        
-        // file
-        paperInfo.File = file;
 
         return paperInfo;
+    }
+
+    /// <summary>
+    /// 下载论文文件
+    /// </summary>
+    /// <param name="url">下载地址</param>
+    /// <returns>内存文件</returns>
+    public async Task<IFormFile> GetPaperFile(string url)
+    {
+        var paperUrl = new Uri(url);
+        return await FetchFile(paperUrl);
     }
 }
