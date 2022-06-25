@@ -1,11 +1,20 @@
 var ShareDB = require("sharedb");
 var WebSocket = require("ws");
 var WebSocketStream = require("websocket-push-stream");
-var RedisClient = require("redis").createClient({
-  url: 'redis://localhost:6379'
-})
-//var redisPubsub = require('sharedb-redis-pubsub')({client: 'redis://localhost:6379'});
-const db = require('sharedb-mongo')('mongodb://localhost:27017/sharedb');
+
+var redisHost = process.env.REDIS_HOST || "localhost";
+var redisPort = process.env.REDIS_PORT || 6379;
+var mongoHost = process.env.MONGO_HOST || "localhost";
+var mongoPort = process.env.MONGO_PORT || 27017;
+
+var RedisClient = require("redis").createClient({url: `redis://${redisHost}:${redisPort}`});
+RedisClient.on("error", function (err) {
+  console.log("Error " + err);
+});
+
+
+var redisPubsub = require('sharedb-redis-pubsub')({client: RedisClient});
+const db = require('sharedb-mongo')(`mongodb://${mongoHost}:${mongoPort}/sharedb`);
 var otJson = require("ot-json1");
 // ShareDB 可以支持多种 OT 类型，例如 JSON 文本，普通文本，富文本等
 // 具体文档可以查看 https://github.com/ottypes/docs
@@ -14,7 +23,7 @@ ShareDB.types.register(otJson.type);
 
 var backend = new ShareDB({
   db: db,  // db would be your mongo db or other storage location
-  //pubsub: redisPubsub
+  pubsub: redisPubsub
 });
 // 监听 9090 端口
 var wss = new WebSocket.Server({ port: 9090 }, () => {
